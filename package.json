@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-express-server-with-passport-celebrate-boilerplate",
+  "name": "guc-server",
   "version": "1.0.0",
-  "description": "A nodejs, express server app, with passport auth integration and celebrate middleware validator boilerplate",
+  "description": "A node web server",
   "main": "app.js",
   "author": "Chinedu Ekene Okpala",
   "license": "MIT",
