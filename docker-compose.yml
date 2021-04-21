@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  server_app:
+    image: server_app:0.1
+    build: .
+    environment:
+      - SECRET=${SECRET}
+      - NODE_ENV=${NODE_ENV}
+      - EXPIRESIN=${EXPIRESIN}
+      - NODEMAILER_PASS=${NODEMAILER_PASS}
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - PROD_DATABASE_URL=${PROD_DATABASE_URL}
+      - DEV_DATABASE_URL=${DEV_DATABASE_URL}
+      - PROD_DATABASE_NAME=${PROD_DATABASE_NAME}
+      - DEV_DATABASE_NAME=${DEV_DATABASE_NAME}
+      - PORT=${PORT}
+    ports:
+      - "81:8000"
+    restart: always
