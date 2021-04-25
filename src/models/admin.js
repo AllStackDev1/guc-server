@@ -1,7 +1,7 @@
 /**
  * Admin Model. Defining Admin schema using mongoose
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
- * @created Nov 11, 2020
+ * @created April 21, 2021
  */
 
 module.exports.name = 'AdminModel'
@@ -40,8 +40,7 @@ module.exports.factory = (mongoose, bcrypt, jwt, lodash, getEnvs) => {
         required: [true, 'Password is a required field'],
         minlength: 8
       },
-      avatar: String,
-      tokens: [String]
+      avatar: String
     },
     {
       versionKey: false,
@@ -69,9 +68,7 @@ module.exports.factory = (mongoose, bcrypt, jwt, lodash, getEnvs) => {
 
   schema.methods.generateAuthToken = function (eIn) {
     const admin = this
-    const token = jwt.sign(admin, secret, { expiresIn: eIn || expiresIn }).toString()
-    admin.tokens.push(token)
-    return admin.save().then(() => token)
+    return jwt.sign(admin, secret, { expiresIn: eIn || expiresIn }).toString()
   }
 
   schema.methods.comparePassword = function (password) {

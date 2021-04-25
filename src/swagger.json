@@ -16,16 +16,8 @@
   "security": [],
   "servers": [
     {
-      "url": "http://localhost:8001/api/v1/",
+      "url": "http://localhost:6000/api/v1/",
       "description": "Development server"
-    },
-    {
-      "url": "https://apis-fms-test.completefarmer.com/api/v1/",
-      "description": "Staging server"
-    },
-    {
-      "url": "https://apis-fms.completefarmer.com/api/v1/",
-      "description": "Production server"
     }
   ],
   "externalDocs": {
@@ -43,7 +35,7 @@
     }
   ],
   "paths": {
-    "/users": {
+    "/students": {
       "get": {
         "tags": [
           "User"
@@ -74,7 +66,7 @@
         }
       }
     },
-    "/users/{id}": {
+    "/students/{id}": {
       "get": {
         "tags": [
           "User"

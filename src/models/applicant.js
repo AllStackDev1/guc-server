@@ -1,11 +1,11 @@
 /**
- * Student Model. Defining Student schema using mongoose
+ * Applicant Model. Defining Applicant schema using mongoose
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
- * @created Nov 11, 2020
+ * @created April 21, 2021
  */
 
-module.exports.name = 'StudentModel'
-module.exports.dependencies = ['mongoose', 'jsonwebtoken', 'lodash', 'GenerateKey', 'envs']
+module.exports.name = 'ApplicantModel'
+module.exports.dependencies = ['mongoose', 'jsonwebtoken', 'lodash', 'GenerateCode', 'envs']
 module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
   'use strict'
 
@@ -13,11 +13,12 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
   const { pick, upperFirst } = lodash
   const { secret, expiresIn } = getEnvs(process.env.NODE_ENV)
 
-  // Define schema for Student Model
+  // Define schema for Applicant Model
   const schema = new Schema(
     {
       code: {
-        type: String
+        type: String,
+        unique: true
       },
       firstName: {
         type: String,
@@ -28,14 +29,14 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
         required: [true, 'Last name is a required field']
       },
       email: {
+        trim: true,
         type: String,
-        required: [true, 'Email is a required field'],
-        unique: true,
         lowercase: true,
-        trim: true
+        required: [true, 'Email is a required field']
       },
       phoneNumber: {
         type: String,
+        unique: true,
         required: [true, 'phone number is a required field']
       },
       avatar: String
@@ -46,16 +47,18 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
     }
   )
 
+  schema.index({ code: 1, phoneNumber: 1 })
+
   schema.pre('save', async function (next) {
-    const student = this
-    if (student.isModified('firstName') || student.isModified('lastName')) {
-      student.firstName = upperFirst(student.firstName.toLowerCase())
-      student.lastName = upperFirst(student.lastName.toLowerCase())
+    const applicant = this
+    if (applicant.isModified('firstName') || applicant.isModified('lastName')) {
+      applicant.firstName = upperFirst(applicant.firstName.toLowerCase())
+      applicant.lastName = upperFirst(applicant.lastName.toLowerCase())
     }
 
-    if (!student.code) {
+    if (!applicant.code) {
       try {
-        student.code = await Promise.resolve(
+        applicant.code = await Promise.resolve(
           new Promise((resolve, reject) => {
             generateCode('gcu', code => {
               if (!code) reject(new Error('Unable to generate new code'))
@@ -72,15 +75,15 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
   })
 
   schema.methods.toJSON = function () {
-    const student = this
-    const studentObject = student.toObject()
-    return pick(studentObject, ['_id', 'email', 'code', 'firstName', 'lastName', 'avatar'])
+    const applicant = this
+    const applicantObject = applicant.toObject()
+    return pick(applicantObject, ['_id', 'email', 'code', 'firstName', 'lastName', 'avatar'])
   }
 
   schema.methods.generateToken = function () {
-    const student = this
-    return jwt.sign(student, secret, { expiresIn }).toString()
+    const applicant = this
+    return jwt.sign(applicant, secret, { expiresIn }).toString()
   }
 
-  return mongoose.model('Student', schema)
+  return mongoose.model('Applicant', schema)
 }

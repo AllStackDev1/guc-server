@@ -14,19 +14,17 @@ module.exports.factory = () => {
    */
   const getEnvs = env => {
     return {
-      dbUrl: process.env[`${env}_DATABASE_URL`],
-      dbName: process.env[`${env}_DATABASE_NAME`],
-      mailerName: process.env[`${env}_MAILER_NAME`],
-      mailerEmail: process.env[`${env}_MAILER_EMAIL`],
-      mailJetPublic: process.env.MAIL_JET_PUBLIC,
-      mailJetPrivate: process.env.MAIL_JET_PRIVATE,
-      termiiKey: process.env.TERMII_KEY,
-      awsId: process.env.AWS_ACCESS_KEY_ID,
-      awsSecret: process.env.AWS_SECRET_ACCESS_KEY,
-      awsRegion: process.env.AWS_REGION,
       secret: process.env.SECRET,
       expiresIn: process.env.EXPIRES_IN,
-      redisPass: process.env.REDIS_PASS
+      dbUrl: process.env[`${env}_DATABASE_URL`],
+      dbName: process.env[`${env}_DATABASE_NAME`],
+      clientUrl: process.env[`${env}_CLIENT_URL`],
+      termiiKey: process.env[`${env}_TERMII_KEY`],
+      mailerName: process.env[`${env}_MAILER_NAME`],
+      mailerEmail: process.env[`${env}_MAILER_EMAIL`],
+      termiiId: process.env[`${env}_TERMII_SENDER_ID`],
+      mailJetPublic: process.env[`${env}_MAIL_JET_PUBLIC`],
+      mailJetPrivate: process.env[`${env}_MAIL_JET_PRIVATE`]
     }
   }
 

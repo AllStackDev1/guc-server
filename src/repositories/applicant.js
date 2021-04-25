@@ -6,10 +6,10 @@ const BaseRepository = require('./base')
 /**
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
  * @description This class extends the BaseRepository class.
- * This is a dependency for the StudentController class.
+ * This is a dependency for the ApplicantController class.
  */
-module.exports.name = 'StudentRepository'
-module.exports.dependencies = ['StudentModel', 'logger']
+module.exports.name = 'ApplicantRepository'
+module.exports.dependencies = ['ApplicantModel', 'logger']
 module.exports.factory = class extends BaseRepository {
   /**
    * @param { object } model mongodb model which provides the db drive methods.

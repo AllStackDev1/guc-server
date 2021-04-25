@@ -3,7 +3,8 @@
  */
 
 module.exports = [
-  // require('./mailer'),
-  require('./response'),
-  require('./key.gen')
+  require('./termii'),
+  require('./mailJet'),
+  require('./code.gen'),
+  require('./response')
 ]

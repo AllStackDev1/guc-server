@@ -5,16 +5,20 @@
  */
 
 module.exports.name = 'miscHelpers'
-module.exports.dependencies = ['path', 'lodash', 'moment', 'node-fetch']
-module.exports.factory = (path, lodash, moment, fetch) => {
+module.exports.dependencies = ['path', 'lodash', 'moment', 'node-fetch', 'fs-extra']
+module.exports.factory = (path, lodash, moment, fetch, fs) => {
   const { isEmpty } = lodash
 
   // resovle app root path
   const appRoot = path.resolve('src')
 
-  const getServerUrl = req => req && req.protocol + '://' + req.get('host')
-
   const isNotEmpty = val => !isEmpty(val)
+
+  const readFile = async filename => await fs.readFile(`${appRoot}/email/${filename}`, 'utf8')
+
+  const replaceDoubleBraces = (str, data) => {
+    return str.replace(/{{(.+?)}}/g, (_, g1) => data[g1] || g1)
+  }
 
   // headers: { Accept: 'application/json', Authorization: authorization},
   const ajax = async (url, headers, body, method = 'GET') =>
@@ -26,10 +30,10 @@ module.exports.factory = (path, lodash, moment, fetch) => {
 
   return {
     ajax,
-    appRoot,
     getDate,
+    readFile,
     dateTime,
     isNotEmpty,
-    getServerUrl
+    replaceDoubleBraces
   }
 }

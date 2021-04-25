@@ -10,18 +10,15 @@
     "test": "tests"
   },
   "scripts": {
-    "dev:win32": "set DEBUG=app,app:* && set NDOE_ENV=DEV && nodemon -r pino-debug src/app.js",
+    "dev:win32": "set DEBUG=app,app:* && set NODE_ENV=DEV && nodemon -r pino-debug src/app.js",
     "dev": "DEBUG=app,app:* NODE_ENV=DEV nodemon -r pino-debug src/app.js",
     "start": "NODE_ENV=PROD pm2 start src/app.js",
     "docker-build": "docker build -t server_app:0.1 .",
     "docker-run": "docker run -p 81:8000 --env-file .env server_app:0.1",
-    "test": "nyc --all ---reporter=html --reporter=text --check-coverage --lines 70 mocha -ui tdd --timeout 40000 ./src/tests/**/*test.js --file ./src/tests/tear-down.js --exit",
-    "lint": "eslint --fix . --ignore-path .eslintignore",
-    "docs": "./node_modules/.bin/jsdoc -c jsdoc.json"
+    "lint": "eslint --fix . --ignore-path .eslintignore"
   },
   "dependencies": {
     "async": "^3.2.0",
-    "aws-sdk": "^2.889.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "celebrate": "^14.0.0",
@@ -30,7 +27,6 @@
     "email-templates": "^8.0.4",
     "eventemitter3": "^4.0.7",
     "express": "^4.17.1",
-    "express-handlebars": "^5.3.0",
     "fs-extra": "^9.1.0",
     "helmet": "^4.5.0",
     "hilary": "^5.2.0",
@@ -43,14 +39,11 @@
     "multer-s3": "^2.9.0",
     "node-fetch": "^2.6.1",
     "node-mailjet": "^3.3.1",
-    "nodemailer": "^6.5.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "query-string": "^7.0.0",
     "randomatic": "^3.1.1",
-    "swagger-ui-express": "^4.1.6",
-    "termii": "^1.1.6"
+    "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
     "chai": "^4.3.4",
@@ -62,9 +55,7 @@
     "eslint-plugin-json": "^2.1.2",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-standard": "^5.0.0",
-    "jsdoc": "^3.6.6",
     "log4js": "^6.3.0",
-    "mocha": "^8.3.2",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
     "nyc": "^15.1.0",
@@ -77,24 +68,8 @@
   "nodemonConfig": {
     "restartable": "rs",
     "ignore": [
-      "node_modules/**/node_modules",
-      "tests/**/*.js"
+      "node_modules/**/node_modules"
     ],
     "delay": "2500"
-  },
-  "nyc": {
-    "exclude": [
-      "src/**/index.js",
-      "docs",
-      "build",
-      "coverage",
-      "src/tests",
-      "src/app.js"
-    ]
-  },
-  "standard": {
-    "env": {
-      "mocha": true
-    }
   }
 }

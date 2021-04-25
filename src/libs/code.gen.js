@@ -3,7 +3,7 @@
  * @summary Generate unique randomize keys.
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
  */
-module.exports.name = 'GenerateKey'
+module.exports.name = 'GenerateCode'
 module.exports.dependencies = ['async', 'randomatic', 'CounterModel', 'logger']
 module.exports.factory = (async, randomize, counter, logger) => {
   'use strict'
@@ -18,7 +18,7 @@ module.exports.factory = (async, randomize, counter, logger) => {
    * @param {Function} next
    */
   return (sequenceName, next) => {
-    const chara = randomize('A0', 3)
+    const chara = randomize('A0', 6)
     waterfall(
       [
         function findDoc(next) {
@@ -35,7 +35,7 @@ module.exports.factory = (async, randomize, counter, logger) => {
                   { new: true },
                   (err, doc) => {
                     if (err) next(err, null)
-                    var count = doc.seq
+                    const count = doc.seq
                     next(null, count)
                   }
                 )
@@ -54,7 +54,7 @@ module.exports.factory = (async, randomize, counter, logger) => {
             .limit(1)
         },
         function sendCount(count, next) {
-          var newSeq = count
+          const newSeq = count
           next(null, newSeq)
         }
       ],
@@ -64,7 +64,7 @@ module.exports.factory = (async, randomize, counter, logger) => {
           logger.getLogger().error(err)
           return
         }
-        return next(`${sequenceName}-${chara}${result}`)
+        return next(`${chara}${result}`)
       }
     )
   }

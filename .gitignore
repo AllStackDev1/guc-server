@@ -21,4 +21,6 @@ docs/
 .nyc_output
 coverage
 *.lcov
-src/email-template/test.html
+
+uploader.js
+

@@ -1,8 +1,8 @@
 /**
- * Student Validations. Defining user validations schema using celebrate
+ * Applicant Validations. Defining user validations schema using celebrate
  * @author Chinedu Ekene Okpala
  */
-module.exports.name = 'StudentValidations'
+module.exports.name = 'ApplicantValidations'
 module.exports.dependencies = ['celebrate']
 module.exports.factory = _celebrate => {
   'use strict'
@@ -33,15 +33,16 @@ module.exports.factory = _celebrate => {
     })
   })
 
-  const otpVerification = celebrate({
-    body: Joi.object().keys({
-      otp: Joi.string().required()
-    })
-  })
-
   const auth = celebrate({
     body: Joi.object().keys({
       code: Joi.string().required()
+    })
+  })
+
+  const verifyOTP = celebrate({
+    body: Joi.object().keys({
+      pin_id: Joi.string().required(),
+      pin: Joi.string().required()
     })
   })
 
@@ -55,7 +56,7 @@ module.exports.factory = _celebrate => {
     auth,
     patch,
     enroll,
-    querySearch,
-    otpVerification
+    verifyOTP,
+    querySearch
   }
 }
