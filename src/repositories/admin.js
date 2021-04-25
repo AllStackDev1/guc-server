@@ -19,20 +19,7 @@ module.exports.factory = class extends BaseRepository {
     super(model, logger)
     this.logger = logger
     this.passportConfig = passportConfig
-  }
-
-  /**
-   * Removes an invalid token from a specific admin's document.
-   * @param {string} id string of a admin.
-   * @param {[]} token to be removed.
-   * @return void.
-   */
-  async destroyToken(id, token) {
-    try {
-      return await this.adminModel.findByIdAndUpdate(id, { $pull: { tokens: { token } } })
-    } catch (error) {
-      this.logger.error(error)
-    }
+    this.auth = this.auth.bind(this)
   }
 
   /**
@@ -51,7 +38,7 @@ module.exports.factory = class extends BaseRepository {
         req.logIn(admin, { session: false }, async err => {
           if (err) return reject(err)
           const token = await admin.generateAuthToken()
-          resolve({ admin, token })
+          resolve(token)
         })
       })(req)
     })

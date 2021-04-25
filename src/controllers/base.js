@@ -27,6 +27,7 @@ class BaseController extends EventEmitter {
     this.helper = helper
     this.logger = logger
     this.response = response
+
     this.log = this.log.bind(this)
     this.objectId = this.objectId.bind(this)
     this.get = this.get.bind(this)
@@ -141,7 +142,7 @@ class BaseController extends EventEmitter {
    */
   async update(req, res) {
     try {
-      const doc = await this.repo.update(req.params.id, req.body)
+      const doc = await this.repo.update(req.params.id || req.user._id, req.body)
       this.listening && this.emit('update', req, doc)
       this.response.successWithData(res, doc, `${this.name} updated successfully!`)
     } catch (error) {

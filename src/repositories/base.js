@@ -19,6 +19,7 @@ class BaseRepository {
   constructor(model, logger) {
     this.model = model
     this.logger = logger
+
     this.getById = this.getById.bind(this)
     this.getOne = this.getOne.bind(this)
     this.get = this.get.bind(this)

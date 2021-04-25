@@ -5,7 +5,6 @@
 module.exports.name = 'bootstrap'
 module.exports.dependencies = [
   'express',
-  'passport',
   'cors',
   'helmet',
   'morgan',
@@ -18,7 +17,6 @@ module.exports.dependencies = [
 ]
 module.exports.factory = (
   express,
-  passport,
   cors,
   helmet,
   morgan,
@@ -60,8 +58,6 @@ module.exports.factory = (
       next()
     }
   })
-
-  app.use(passport.initialize())
 
   // register routes middleware
   app.use('/api/v1', routers)

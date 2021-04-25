@@ -11,15 +11,20 @@ module.exports.dependencies = [
   'AdminValidations',
   'ApplicantController',
   'ApplicantValidations',
-  'MiscValidations'
+  'MiscValidations',
+  'hasAccess',
+  'miscHelpers'
 ]
 module.exports.factory = (
   AdminController,
   AdminValidations,
   ApplicantController,
   ApplicantValidations,
-  MiscValidations
+  MiscValidations,
+  hasAccess,
+  Helpers
 ) => {
+  const { APPLICANT, ADMIN } = Helpers.AccessType
   /**
    * @param { string } route defination
    * @param { Array<'post' || 'get'|| 'patch'|| 'put' || 'delete' >} methods allowed on a route
@@ -27,7 +32,7 @@ module.exports.factory = (
    * @param { { post: Array<Function>, get: Array<Function>, patch: Array<Function>, put: Array<Function>, delete: Array<Function> } } middlewares request handlers
    */
   return [
-    // #region STUDENT ROUTE
+    // #region APPLICANT ROUTE
     {
       route: 'enroll',
       methods: ['post'],
@@ -49,9 +54,35 @@ module.exports.factory = (
         post: [ApplicantValidations.verifyOTP, ApplicantController.verifyOTP]
       }
     },
+    {
+      route: 'applicants',
+      methods: ['get'],
+      guard: true,
+      middlewares: {
+        get: [hasAccess([ADMIN]), ApplicantValidations.querySearch, ApplicantController.get]
+      }
+    },
+    {
+      route: 'applicants/update-profile',
+      methods: ['patch'],
+      guard: true,
+      middlewares: {
+        patch: [hasAccess([APPLICANT]), ApplicantValidations.patch, ApplicantController.update]
+      }
+    },
+    {
+      route: 'applicants/:id',
+      methods: ['get', 'patch', 'delete'],
+      guard: true,
+      middlewares: {
+        get: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.getById],
+        patch: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.update],
+        delete: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.delete]
+      }
+    },
     // #endregion
 
-    // #region ADMIN ROUTE
+    // #region ADMIN AUTH ROUTE
     {
       route: 'login',
       methods: ['post'],
@@ -60,32 +91,19 @@ module.exports.factory = (
       }
     },
     {
-      route: 'create',
+      route: 'create-admin',
       methods: ['post'],
-      // guard: true,
-      // guardType: 'admin',
+      guard: true,
       middlewares: {
-        post: [AdminValidations.create, AdminController.insert]
+        post: [hasAccess([ADMIN]), AdminValidations.create, AdminController.insert]
       }
     },
     {
-      route: 'applicants',
-      methods: ['get'],
+      route: 'update-profile',
+      methods: ['patch'],
       guard: true,
-      guardType: 'admin',
       middlewares: {
-        get: [ApplicantValidations.querySearch, ApplicantController.get]
-      }
-    },
-    {
-      route: 'applicants/:id',
-      methods: ['get', 'patch', 'delete'],
-      guard: true,
-      guardType: 'admin',
-      middlewares: {
-        get: [MiscValidations.id, ApplicantController.getById],
-        patch: [MiscValidations.id, ApplicantController.update],
-        delete: [MiscValidations.id, ApplicantController.delete]
+        patch: [hasAccess([ADMIN]), AdminValidations.patch, AdminController.update]
       }
     }
     // #endregion

@@ -3,25 +3,24 @@
  * @author Chinedu Ekene Okpala  <chinedu.okpala@completefarmer.com>
  */
 module.exports.name = 'auth'
-module.exports.dependencies = ['passport', 'jsonwebtoken', 'envs', 'response']
-module.exports.factory = (passport, jwt, getEnvs, response) => {
+module.exports.dependencies = ['jsonwebtoken', 'envs', 'response']
+module.exports.factory = (jwt, getEnvs, response) => {
   const { secret } = getEnvs(process.env.NODE_ENV)
 
-  return function (type) {
+  return function (passport, type) {
     return async function (req, res, next) {
-      if (type) {
-        if (type === 'admin') {
-          return passport.authenticate('jwt', { session: false })
-        } else {
-          try {
-            await jwt.verify(req.token, secret)
-            next()
-          } catch (error) {
-            return response.unauthorized(res)
-          }
-        }
+      if (type === 'admin') {
+        return passport.authenticate('jwt', { session: false })(req, res, next)
       } else {
-        return response.forbidden(res)
+        try {
+          const token = req.headers.authorization.split(' ')[1]
+          const applicant = await jwt.verify(token, secret)
+          req.token = token
+          req.user = applicant
+          next()
+        } catch (error) {
+          return response.unauthorized(res)
+        }
       }
     }
   }

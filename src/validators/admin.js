@@ -18,9 +18,6 @@ module.exports.factory = _celebrate => {
         .regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/)
         .required(),
       email: Joi.string().email({ minDomainSegments: 2 }).required(),
-      phoneNumber: Joi.string()
-        .regex(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/)
-        .required(),
       password: Joi.string()
         .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
         .required()
@@ -32,7 +29,7 @@ module.exports.factory = _celebrate => {
       firstName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
       lastName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
       email: Joi.string().email({ minDomainSegments: 2 }).required(),
-      phoneNumber: Joi.string().regex(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/)
+      password: Joi.string().regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
     })
   })
 

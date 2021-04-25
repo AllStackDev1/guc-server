@@ -20,6 +20,11 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
     return str.replace(/{{(.+?)}}/g, (_, g1) => data[g1] || g1)
   }
 
+  const AccessType = {
+    APPLICANT: 'APPLICANT',
+    ADMIN: 'ADMIN'
+  }
+
   // headers: { Accept: 'application/json', Authorization: authorization},
   const ajax = async (url, headers, body, method = 'GET') =>
     await fetch(url, { method, headers, body }).then(res => res.json())
@@ -34,6 +39,7 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
     readFile,
     dateTime,
     isNotEmpty,
+    AccessType,
     replaceDoubleBraces
   }
 }

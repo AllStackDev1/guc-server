@@ -31,10 +31,6 @@ module.exports.factory = (mongoose, bcrypt, jwt, lodash, getEnvs) => {
         lowercase: true,
         trim: true
       },
-      phoneNumber: {
-        type: String,
-        required: [true, 'phone number is a required field']
-      },
       password: {
         type: String,
         required: [true, 'Password is a required field'],
@@ -68,7 +64,7 @@ module.exports.factory = (mongoose, bcrypt, jwt, lodash, getEnvs) => {
 
   schema.methods.generateAuthToken = function (eIn) {
     const admin = this
-    return jwt.sign(admin, secret, { expiresIn: eIn || expiresIn }).toString()
+    return jwt.sign(admin.toJSON(), secret, { expiresIn: eIn || expiresIn }).toString()
   }
 
   schema.methods.comparePassword = function (password) {

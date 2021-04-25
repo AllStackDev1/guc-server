@@ -62,6 +62,7 @@ module.exports.factory = class extends BaseController {
     // method binding
     this.auth = this.auth.bind(this)
     this.verifyOTP = this.verifyOTP.bind(this)
+    this.getAA = this.getAA.bind(this)
   }
 
   async auth(req, res) {
@@ -95,6 +96,14 @@ module.exports.factory = class extends BaseController {
       const applicant = await this.repo.getOne({ phoneNumber: '+' + response.msisdn })
       const token = await applicant.generateToken()
       this.response.successWithData(res, token)
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async getAA(req, res) {
+    try {
+      this.response.success(res, 'just test')
     } catch (error) {
       this.response.error(res, error.message || error)
     }

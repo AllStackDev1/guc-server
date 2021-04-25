@@ -56,15 +56,11 @@ module.exports.factory = (passport, passportLocal, passportJWT, AdminModel, envs
     new JWTStrategy(
       { jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), secretOrKey: secret },
       async (jwtPayload, done) => {
-        if (jwtPayload.access === 'auth') {
-          try {
-            const admin = await AdminModel.findById(jwtPayload._id)
-            return done(null, admin)
-          } catch (error) {
-            done({ message: error })
-          }
-        } else {
-          return done({ message: 'Token access invalid' })
+        try {
+          return done(null, jwtPayload)
+        } catch (error) {
+          console.log(error)
+          done({ message: error })
         }
       }
     )

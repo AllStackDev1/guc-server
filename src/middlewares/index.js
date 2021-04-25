@@ -1,4 +1,4 @@
 /**
  * Registers various files for this module
  */
-module.exports = [require('./auth'), require('./passport-config')]
+module.exports = [require('./access'), require('./passport-config')]
