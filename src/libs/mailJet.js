@@ -7,16 +7,14 @@
  */
 
 module.exports.name = 'MailJet'
-module.exports.dependencies = ['node-mailjet', 'envs', 'miscHelpers']
-module.exports.factory = (nodeMailJet, getEnvs, helpers) => {
+module.exports.dependencies = ['node-mailjet', 'envs', 'logger', 'miscHelpers']
+module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
   'use strict'
   const { connect } = nodeMailJet
   const { readFile, replaceDoubleBraces } = helpers
 
   // Get application configuration based on environment
-  const { mailJetPublic, mailJetPrivate, mailerName, mailerEmail, eImgLoc } = getEnvs(
-    process.env.NODE_ENV
-  )
+  const { mailJetPublic, mailJetPrivate, mailerName, mailerEmail } = getEnvs(process.env.NODE_ENV)
 
   const mailJet = connect(mailJetPublic, mailJetPrivate)
 
@@ -58,13 +56,25 @@ module.exports.factory = (nodeMailJet, getEnvs, helpers) => {
     }
   }
 
-  const enrollEmail = async ({ data, ...rest }) => {
-    data.images = eImgLoc
-    data.year = new Date().getFullYear()
-    const html = await readFile('email-templates/application.html')
-    const content = replaceDoubleBraces(html, data)
-    return await sendMail({ ...rest, content })
+  const applicationCodeEmail = async ({ data, ...rest }) => {
+    try {
+      const html = await readFile('email-templates/application-code.html')
+      const content = replaceDoubleBraces(html, data)
+      return await sendMail({ ...rest, subject: 'Application code', content })
+    } catch (error) {
+      this.logger.getLogger().error(error)
+    }
   }
 
-  return { enrollEmail }
+  const welcomeEmail = async ({ data, ...rest }) => {
+    try {
+      const html = await readFile('email-templates/welcome-email.html')
+      const content = replaceDoubleBraces(html, data)
+      return await sendMail({ ...rest, subject: 'Welcome Email', content })
+    } catch (error) {
+      this.logger.getLogger().error(error)
+    }
+  }
+
+  return { applicationCodeEmail, welcomeEmail }
 }

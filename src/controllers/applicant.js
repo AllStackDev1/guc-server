@@ -40,23 +40,21 @@ module.exports.factory = class extends BaseController {
     this.getEnvs = getEnvs
 
     // events
-    this.on('insert', async (req, doc) => {
-      try {
-        const { clientUrl } = this.getEnvs(process.env.NODE_ENV)
-        const payload = {
-          subject: 'Application code',
-          email: doc.email,
-          name: doc.firstName,
-          data: {
-            code: doc.code,
-            firstName: doc.firstName,
-            link: clientUrl + '/login?code=' + doc.code
-          }
+    this.on('insert', (req, doc) => {
+      const { clientUrl, eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+      const payload = {
+        email: doc.email,
+        name: doc.firstName + ' ' + doc.lastName,
+        data: {
+          code: doc.code,
+          images: eImgLoc,
+          firstName: doc.firstName,
+          year: new Date().getFullYear(),
+          link: clientUrl + '/login?code=' + doc.code
         }
-        await this.mailJet.enrollEmail(payload)
-      } catch (error) {
-        this.log(error)
       }
+      this.mailJet.welcomeEmail(payload)
+      this.mailJet.applicationCodeEmail(payload)
     })
 
     // method binding
@@ -122,7 +120,20 @@ module.exports.factory = class extends BaseController {
           `No ${this.name.toLowerCase()} having this phone number: ${req.body.phoneNumber}`
         )
       }
-      next()
+      const { clientUrl, eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+      const payload = {
+        email: applicant.email,
+        name: applicant.firstName + ' ' + applicant.lastName,
+        data: {
+          code: applicant.code,
+          images: eImgLoc,
+          firstName: applicant.firstName,
+          year: new Date().getFullYear(),
+          link: clientUrl + '/login?code=' + applicant.code
+        }
+      }
+      await this.mailJet.applicationCodeEmail(payload)
+      this.response.success(res, `${this.name} code sent to ${applicant.email}`)
     } catch (error) {
       this.response.error(res, error.message || error)
     }
