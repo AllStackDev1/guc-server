@@ -10,15 +10,13 @@ module.exports.dependencies = [
   'express',
   'passport',
   'swagger-ui-express',
-  'passport-config',
+  'auth',
   'response',
   'endpoints'
 ]
-module.exports.factory = (express, passport, swaggerUi, passportConfig, response, endpoints) => {
+module.exports.factory = (express, passport, swaggerUi, auth, response, endpoints) => {
   // init express router
   const router = express.Router()
-
-  const auth = passport.authenticate('jwt', { session: false })
 
   // Add Swagger API Documentation
   const swaggerDocument = require('../swagger.json')
@@ -29,7 +27,7 @@ module.exports.factory = (express, passport, swaggerUi, passportConfig, response
     endpoint.methods.forEach(method => {
       router[method](
         `/${endpoint.route}`,
-        endpoint.guard ? auth : (req, res, next) => next(),
+        endpoint.guard ? auth(endpoint.guardType) : (req, res, next) => next(),
         ...endpoint.middlewares[method]
       )
     })

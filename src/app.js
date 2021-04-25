@@ -8,7 +8,7 @@
 require('dotenv').config()
 
 // Setup hilary DI
-const scope = require('hilary').scope('NodeJSServerBS')
+const scope = require('hilary').scope('GCUServer')
 
 scope.bootstrap(
   [

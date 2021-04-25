@@ -6,10 +6,10 @@ const BaseRepository = require('./base')
 /**
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
  * @description This class extends the BaseRepository class.
- * This is a dependency for the UserController class.
+ * This is a dependency for the AdminController class.
  */
-module.exports.name = 'UserRepository'
-module.exports.dependencies = ['UserModel', 'passport-config', 'logger']
+module.exports.name = 'AdminRepository'
+module.exports.dependencies = ['AdminModel', 'passport-config', 'logger']
 module.exports.factory = class extends BaseRepository {
   /**
    * @param { object } model mongodb model which provides the db drive methods.
@@ -17,39 +17,41 @@ module.exports.factory = class extends BaseRepository {
    */
   constructor(model, passportConfig, logger) {
     super(model, logger)
+    this.logger = logger
+    this.passportConfig = passportConfig
   }
 
   /**
-   * Removes an invalid token from a specific user's document.
-   * @param {string} id string of a user.
+   * Removes an invalid token from a specific admin's document.
+   * @param {string} id string of a admin.
    * @param {[]} token to be removed.
    * @return void.
    */
   async destroyToken(id, token) {
     try {
-      return await this.userModel.findByIdAndUpdate(id, { $pull: { tokens: { token } } })
+      return await this.adminModel.findByIdAndUpdate(id, { $pull: { tokens: { token } } })
     } catch (error) {
-      logger.error(error)
+      this.logger.error(error)
     }
   }
 
   /**
-   * Authenticate a user.
+   * Authenticate a admin.
    * @param {[]} req request for passport authentication.
-   * @return Returns the authenticated user's document.
+   * @return Returns the authenticated admin's document.
    */
   auth(req) {
     return new Promise((resolve, reject) => {
-      passportConfig.authenticate('local', { session: false }, (err, user, info) => {
+      this.passportConfig.authenticate('local', { session: false }, (err, admin, info) => {
         if (err) {
-          logger.error(err)
+          this.logger.error(err)
           reject(err.message)
         }
-        if (!user) return reject(info.message)
-        req.logIn(user, { session: false }, async err => {
+        if (!admin) return reject(info.message)
+        req.logIn(admin, { session: false }, async err => {
           if (err) return reject(err)
-          let token = await user.generateAuthToken('auth', false)
-          resolve({ user, token })
+          const token = await admin.generateAuthToken()
+          resolve({ admin, token })
         })
       })(req)
     })

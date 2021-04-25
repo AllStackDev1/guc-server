@@ -28,7 +28,6 @@
     ]
   },
   "extends": [
-    "prettier/standard",
     "prettier"
   ],
   "plugins": [

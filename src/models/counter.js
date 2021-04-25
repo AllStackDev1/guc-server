@@ -18,17 +18,12 @@ module.exports.factory = mongoose => {
       },
       seq: {
         type: Number,
-        default: 5101
+        default: 10000
       }
     },
     {
       versionKey: false,
-      timestamps: true,
-      writeConcern: {
-        w: 'majority',
-        j: true,
-        wtimeout: 1000
-      }
+      timestamps: true
     }
   )
 

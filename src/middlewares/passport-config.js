@@ -1,27 +1,27 @@
 /**
- * Functional Module for user authentication
+ * Functional Module for admin authentication
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
  */
 module.exports.name = 'passport-config'
-module.exports.dependencies = ['passport', 'passport-local', 'passport-jwt', 'UserModel', 'envs']
-module.exports.factory = (passport, passportLocal, passportJWT, UserModel, envs) => {
+module.exports.dependencies = ['passport', 'passport-local', 'passport-jwt', 'AdminModel', 'envs']
+module.exports.factory = (passport, passportLocal, passportJWT, AdminModel, envs) => {
   const LocalStrategy = passportLocal.Strategy
   const JWTStrategy = passportJWT.Strategy
   const ExtractJWT = passportJWT.ExtractJwt
 
   const { secret } = envs(process.env.NODE_ENV)
 
-  passport.serializeUser((user, done) => {
-    done(null, user.email)
+  passport.serializeUser((admin, done) => {
+    done(null, admin.email)
   })
 
   passport.deserializeUser(async (email, done) => {
     try {
-      const user = await UserModel.findOne(email)
-      if (!user) {
-        return done(new Error({ message: 'User not found!' }))
+      const admin = await AdminModel.findOne(email)
+      if (!admin) {
+        return done(new Error({ message: 'Admin not found!' }))
       }
-      done(null, user)
+      done(null, admin)
     } catch (e) {
       done(e)
     }
@@ -35,22 +35,19 @@ module.exports.factory = (passport, passportLocal, passportJWT, UserModel, envs)
         passReqToCallback: true
       },
       async (req, username, password, done) => {
-        let user
+        let admin
         try {
-          user = await UserModel.findOne({ email: username })
-          if (!user) {
+          admin = await AdminModel.findOne({ email: username })
+          if (!admin) {
             return done(null, false, { message: 'Incorrect email or password' })
           }
-        } catch (e) {
-          return done({ message: e }, null)
+        } catch (error) {
+          return done({ message: error }, null)
         }
 
-        const match = await user.comparePassword(password)
+        const match = await admin.comparePassword(password)
         if (!match) return done(null, false, { message: 'Incorrect email or password' })
-        if (!user.isVerified) {
-          return done(null, false, { message: 'Your account has not been verified.' })
-        }
-        return done(null, user)
+        return done(null, admin)
       }
     )
   )
@@ -61,8 +58,8 @@ module.exports.factory = (passport, passportLocal, passportJWT, UserModel, envs)
       async (jwtPayload, done) => {
         if (jwtPayload.access === 'auth') {
           try {
-            const user = await UserModel.findById(jwtPayload._id)
-            return done(null, user)
+            const admin = await AdminModel.findById(jwtPayload._id)
+            return done(null, admin)
           } catch (error) {
             done({ message: error })
           }

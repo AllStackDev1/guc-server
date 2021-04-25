@@ -2,4 +2,4 @@
  * Registers various files for this module
  */
 
-module.exports = [require('./user')]
+module.exports = [require('./admin'), require('./student')]

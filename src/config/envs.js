@@ -16,6 +16,11 @@ module.exports.factory = () => {
     return {
       dbUrl: process.env[`${env}_DATABASE_URL`],
       dbName: process.env[`${env}_DATABASE_NAME`],
+      mailerName: process.env[`${env}_MAILER_NAME`],
+      mailerEmail: process.env[`${env}_MAILER_EMAIL`],
+      mailJetPublic: process.env.MAIL_JET_PUBLIC,
+      mailJetPrivate: process.env.MAIL_JET_PRIVATE,
+      termiiKey: process.env.TERMII_KEY,
       awsId: process.env.AWS_ACCESS_KEY_ID,
       awsSecret: process.env.AWS_SECRET_ACCESS_KEY,
       awsRegion: process.env.AWS_REGION,

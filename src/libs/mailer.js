@@ -7,52 +7,50 @@
  */
 
 module.exports.name = 'Mailer'
-module.exports.dependencies = ['nodemailer', 'envs', 'email-templates', 'miscHelpers']
-module.exports.factory = (nodemailer, getEnvs, Email, helpers) => {
+module.exports.dependencies = ['node-mailjet', 'envs', 'miscHelpers']
+module.exports.factory = (mailJet, getEnvs, helpers) => {
   'use strict'
+  const { connect, Email } = mailJet
 
   // Get application configuration based on environment
   const envs = getEnvs(process.env.NODE_ENV)
 
-  // helpers
-  const { appRoot } = helpers
-
-  // SMTP Mail transporter
-  const transporter = nodemailer.createTransport({
-    host: envs.smtpHost,
-    port: envs.smtpPort,
-    secure: true,
-    auth: { user: envs.smtpUser, pass: envs.smtpPass }
-  })
-
-  // Email Templete Setup
-  const mailer = new Email({
-    views: { root: `${appRoot}/emails`, options: { extension: 'hbs' } }
-  })
+  const mailjet = connect(envs.mailJetPublic || '', envs.mailJetPrivate || '')
 
   /**
    * @summary
-   * @param { string } to
-   * @param { string } role
-   * @param { string } token
+   * @param { string } mail
    */
-  const signUp = async (to, role, token) => {
+  const sendMail = async mail => {
     try {
-      const link = `${envs.authService}/verify-account/${token}`
-      const source = await mailer.render('verify', { link })
-      const mailOptions = {
-        from: 'Test <no-reply@test.com>',
-        to,
-        subject: 'Please Verify Your Email Address',
-        html: source
+      // await mailSchema.validateAsync(mail)
+      const message = {
+        From: {
+          Name: envs.mailerName || 'Zeedas',
+          Email: envs.mailerEmail || 'service-noreply@zeedas.com'
+        },
+        Subject: mail.subject,
+        HTMLPart: mail.content,
+        To: [
+          {
+            Email: mail.email
+          }
+        ]
       }
-      return await transporter.sendMail(mailOptions)
+
+      if (mail.replyTo) {
+        message['ReplyTo'] = {
+          Email: mail.replyTo
+        }
+      }
+      if (mail.name) {
+        message.To[0]['Name'] = mail.name
+      }
+      return await this.mailJet.post('send', { version: 'v3.1' }).request({
+        Messages: [message]
+      })
     } catch (error) {
       return Promise.reject(error)
     }
-  }
-
-  return {
-    signUp
   }
 }

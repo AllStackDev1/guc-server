@@ -7,58 +7,85 @@
 
 module.exports.name = 'endpoints'
 module.exports.dependencies = [
-  'UserController',
-  'UserValidations',
-  'MiscValidations',
-  'Uploader',
-  'miscHelpers'
+  'AdminController',
+  'AdminValidations',
+  'StudentController',
+  'StudentValidations',
+  'MiscValidations'
 ]
-module.exports.factory = (UserController, UserValidations, MiscValidations, uploader, helper) => {
+module.exports.factory = (
+  AdminController,
+  AdminValidations,
+  StudentController,
+  StudentValidations,
+  MiscValidations
+) => {
   /**
    * @param { string } route defination
    * @param { Array<'post' || 'get'|| 'patch'|| 'put' || 'delete' >} methods allowed on a route
    * @param { bool } guard toggle for authentication
    * @param { { post: Array<Function>, get: Array<Function>, patch: Array<Function>, put: Array<Function>, delete: Array<Function> } } middlewares request handlers
    */
-
   return [
-    // #region User ROUTE
+    // #region STUDENT ROUTE
     {
-      route: 'signup',
+      route: 'enroll',
       methods: ['post'],
       middlewares: {
-        post: [UserValidations.post, UserController.insert]
+        post: [StudentValidations.enroll, StudentController.insert]
       }
     },
     {
-      route: 'verify-account/:token',
-      methods: ['patch'],
+      route: 'auth',
+      methods: ['post'],
       middlewares: {
-        patch: [UserValidations.paramsQuery, UserController.verifyAccount]
+        post: [StudentValidations.auth, StudentController.auth]
       }
     },
+    {
+      route: 'otp-verification',
+      methods: ['post'],
+      middlewares: {
+        post: [StudentValidations.otpVerification, StudentController.otpVerification]
+      }
+    },
+    // #endregion
+
+    // #region ADMIN ROUTE
     {
       route: 'login',
       methods: ['post'],
       middlewares: {
-        post: [UserValidations.login, UserController.login]
+        post: [AdminValidations.login, AdminController.login]
       }
     },
     {
-      route: 'Users',
+      route: 'create',
+      methods: ['post'],
+      guard: true,
+      guardType: 'admin',
+      middlewares: {
+        post: [AdminValidations.create, AdminController.insert]
+      }
+    },
+    {
+      route: 'students',
       methods: ['get'],
       guard: true,
+      guardType: 'admin',
       middlewares: {
-        get: [UserValidations.querySearch, UserController.get]
+        get: [StudentValidations.querySearch, StudentController.get]
       }
     },
     {
-      route: 'Users/:id',
-      methods: ['get', 'delete'],
+      route: 'students/:id',
+      methods: ['get', 'patch', 'delete'],
       guard: true,
+      guardType: 'admin',
       middlewares: {
-        get: [MiscValidations.id, UserController.getById],
-        delete: [MiscValidations.id, UserController.delete]
+        get: [MiscValidations.id, StudentController.getById],
+        patch: [MiscValidations.id, StudentController.update],
+        delete: [MiscValidations.id, StudentController.delete]
       }
     }
     // #endregion

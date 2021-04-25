@@ -14,24 +14,11 @@ module.exports.factory = (path, lodash, moment, fetch) => {
 
   const getServerUrl = req => req && req.protocol + '://' + req.get('host')
 
-  const getData = item => !isEmpty(item) && item
-
-  const contains = (arr1, arr2) => {
-    if (!isEmpty(arr1) && !isEmpty(arr2)) return arr1.some(ele => arr2.includes(ele))
-    return false
-  }
-
   const isNotEmpty = val => !isEmpty(val)
 
-  const ajax = async (url, authorization, body, method = 'GET') =>
-    await fetch(url, {
-      method,
-      headers: {
-        Accept: 'application/json',
-        Authorization: authorization
-      },
-      body
-    }).then(res => res.json())
+  // headers: { Accept: 'application/json', Authorization: authorization},
+  const ajax = async (url, headers, body, method = 'GET') =>
+    await fetch(url, { method, headers, body }).then(res => res.json())
 
   const getDate = (date, num, type) => moment(date).add(num, type).format()
 
@@ -40,9 +27,7 @@ module.exports.factory = (path, lodash, moment, fetch) => {
   return {
     ajax,
     appRoot,
-    getData,
     getDate,
-    contains,
     dateTime,
     isNotEmpty,
     getServerUrl

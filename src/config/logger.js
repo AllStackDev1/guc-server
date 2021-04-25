@@ -21,7 +21,7 @@ module.exports.factory = log4js => {
       appenders: {
         errors: {
           type: 'file',
-          filename: './logs/name_of_app_api_errors.log',
+          filename: './logs/gcu_api_errors.log',
           maxLogSize: 10485760,
           backups: 3,
           compress: true

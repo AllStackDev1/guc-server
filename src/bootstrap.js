@@ -92,14 +92,10 @@ module.exports.factory = (
 
   // register celebrate validation middleware
   app.use(errors())
-  console.log('Hell 1')
 
   // connect to the database and if successful, start the server
   dbConfig(() => {
-    console.log('Hel2')
     app.listen(port, () => {
-      console.log(`Express server listening on port ${port}`)
-      console.log(`You should be able to connect to the api on http://localhost:${port}`)
       logger.debug(`Express server listening on port ${port}`)
       logger.debug(`You should be able to connect to the api on http://localhost:${port}`)
     })
