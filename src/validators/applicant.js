@@ -28,8 +28,7 @@ module.exports.factory = _celebrate => {
     body: Joi.object().keys({
       firstName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
       lastName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
-      email: Joi.string().email({ minDomainSegments: 2 }),
-      phoneNumber: Joi.string()
+      email: Joi.string().email({ minDomainSegments: 2 })
     })
   })
 
@@ -46,6 +45,12 @@ module.exports.factory = _celebrate => {
     })
   })
 
+  const resendCode = celebrate({
+    body: Joi.object().keys({
+      phoneNumber: Joi.string().required()
+    })
+  })
+
   const querySearch = celebrate({
     query: Joi.object().keys({
       email: Joi.string()
@@ -57,6 +62,7 @@ module.exports.factory = _celebrate => {
     patch,
     enroll,
     verifyOTP,
+    resendCode,
     querySearch
   }
 }

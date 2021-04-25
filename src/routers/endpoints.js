@@ -45,6 +45,13 @@ module.exports.factory = (
       }
     },
     {
+      route: 'resend-code',
+      methods: ['post'],
+      middlewares: {
+        post: [ApplicantValidations.resendCode, ApplicantController.resendCode]
+      }
+    },
+    {
       route: 'auth',
       methods: ['post'],
       middlewares: {

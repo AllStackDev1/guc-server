@@ -64,6 +64,48 @@
         }
       }
     },
+    "/resend-code": {
+      "post": {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Resend code applicantion to applicant",
+        "operationId": "enroll",
+        "requestBody": {
+          "description": "Unique phoneNumber",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phoneNumber": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Applicant"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
     "/auth": {
       "post": {
         "tags": [

@@ -44,13 +44,13 @@ module.exports.factory = class extends BaseController {
       try {
         const { clientUrl } = this.getEnvs(process.env.NODE_ENV)
         const payload = {
-          subject: 'Your GCU Application code',
+          subject: 'Application code',
           email: doc.email,
           name: doc.firstName,
           data: {
             code: doc.code,
             firstName: doc.firstName,
-            link: clientUrl + '/login'
+            link: clientUrl + '/login?code=' + doc.code
           }
         }
         await this.mailJet.enrollEmail(payload)
@@ -63,6 +63,7 @@ module.exports.factory = class extends BaseController {
     this.auth = this.auth.bind(this)
     this.verifyOTP = this.verifyOTP.bind(this)
     this.preInsert = this.preInsert.bind(this)
+    this.resendCode = this.resendCode.bind(this)
   }
 
   async auth(req, res) {
@@ -104,7 +105,23 @@ module.exports.factory = class extends BaseController {
   async preInsert(req, res, next) {
     try {
       const applicant = await this.repo.getOne({ phoneNumber: req.body.phoneNumber })
-      if (applicant) throw new Error('A user with this phone number already exist')
+      if (applicant) {
+        throw new Error(`An ${this.name.toLowerCase()} with this phone number already exist`)
+      }
+      next()
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async resendCode(req, res, next) {
+    try {
+      const applicant = await this.repo.getOne({ phoneNumber: req.body.phoneNumber })
+      if (!applicant) {
+        throw new Error(
+          `No ${this.name.toLowerCase()} having this phone number: ${req.body.phoneNumber}`
+        )
+      }
       next()
     } catch (error) {
       this.response.error(res, error.message || error)

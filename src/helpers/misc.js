@@ -14,7 +14,7 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
 
   const isNotEmpty = val => !isEmpty(val)
 
-  const readFile = async filename => await fs.readFile(`${appRoot}/email/${filename}`, 'utf8')
+  const readFile = async filePath => await fs.readFile(`${appRoot}/${filePath}`, 'utf8')
 
   const replaceDoubleBraces = (str, data) => {
     return str.replace(/{{(.+?)}}/g, (_, g1) => data[g1] || g1)

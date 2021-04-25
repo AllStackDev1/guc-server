@@ -14,7 +14,9 @@ module.exports.factory = (nodeMailJet, getEnvs, helpers) => {
   const { readFile, replaceDoubleBraces } = helpers
 
   // Get application configuration based on environment
-  const { mailJetPublic, mailJetPrivate, mailerName, mailerEmail } = getEnvs(process.env.NODE_ENV)
+  const { mailJetPublic, mailJetPrivate, mailerName, mailerEmail, eImgLoc } = getEnvs(
+    process.env.NODE_ENV
+  )
 
   const mailJet = connect(mailJetPublic, mailJetPrivate)
 
@@ -57,7 +59,9 @@ module.exports.factory = (nodeMailJet, getEnvs, helpers) => {
   }
 
   const enrollEmail = async ({ data, ...rest }) => {
-    const html = await readFile('application-code.hbs')
+    data.images = eImgLoc
+    data.year = new Date().getFullYear()
+    const html = await readFile('email-templates/application.html')
     const content = replaceDoubleBraces(html, data)
     return await sendMail({ ...rest, content })
   }

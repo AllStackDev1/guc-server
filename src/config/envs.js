@@ -16,6 +16,7 @@ module.exports.factory = () => {
     return {
       secret: process.env.SECRET,
       expiresIn: process.env.EXPIRES_IN,
+      eImgLoc: process.env[`${env}_EIMG_LOC`],
       dbUrl: process.env[`${env}_DATABASE_URL`],
       dbName: process.env[`${env}_DATABASE_NAME`],
       clientUrl: process.env[`${env}_CLIENT_URL`],
