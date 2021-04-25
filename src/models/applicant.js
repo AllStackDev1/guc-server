@@ -80,7 +80,7 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
     return pick(applicantObject, ['_id', 'email', 'code', 'firstName', 'lastName', 'avatar'])
   }
 
-  schema.methods.generateToken = function () {
+  schema.methods.generateAuthToken = function () {
     const applicant = this
     return jwt.sign(applicant, secret, { expiresIn }).toString()
   }

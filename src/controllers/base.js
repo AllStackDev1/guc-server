@@ -76,7 +76,13 @@ class BaseController extends EventEmitter {
     try {
       const doc = await this.repo.insert(req.body)
       this.listening && this.emit('insert', req, doc)
-      this.response.successWithData(res, doc, `${this.name} created successfully!`, 201)
+      // code shouldn't be returned a response so delete
+      let data = doc
+      if (data.code) {
+        data = JSON.parse(JSON.stringify(doc))
+        delete data.code
+      }
+      this.response.successWithData(res, data, `${this.name} created successfully!`, 201)
     } catch (error) {
       this.response.error(res, error.message || error)
     }

@@ -18,7 +18,7 @@ module.exports.factory = (async, randomize, counter, logger) => {
    * @param {Function} next
    */
   return (sequenceName, next) => {
-    const chara = randomize('A0', 6)
+    const num = randomize('0', 3)
     waterfall(
       [
         function findDoc(next) {
@@ -64,7 +64,7 @@ module.exports.factory = (async, randomize, counter, logger) => {
           logger.getLogger().error(err)
           return
         }
-        return next(`${chara}${result}`)
+        return next(`${result}${num}`)
       }
     )
   }

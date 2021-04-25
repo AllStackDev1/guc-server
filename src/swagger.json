@@ -16,7 +16,7 @@
   "security": [],
   "servers": [
     {
-      "url": "http://localhost:6000/api/v1/",
+      "url": "http://localhost:8009/api/v1/",
       "description": "Development server"
     }
   ],
@@ -26,8 +26,8 @@
   },
   "tags": [
     {
-      "name": "Complete Farmer Buyer API",
-      "description": "Basic API Template for Microservices",
+      "name": "GCU Application API",
+      "description": "Backend service",
       "externalDocs": {
         "description": "Find out more",
         "url": "http://swagger.io"
@@ -35,21 +35,19 @@
     }
   ],
   "paths": {
-    "/students": {
-      "get": {
+    "/enroll": {
+      "post": {
         "tags": [
-          "User"
+          "Applicant"
         ],
-        "summary": "Retrives location",
-        "operationId": "get-location-record",
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ],
+        "summary": "Enroll applicant - code* is auto generated",
+        "operationId": "enroll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Applicant"
+        },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/Users"
+            "$ref": "#/components/responses/Applicant"
           },
           "400": {
             "$ref": "#/components/responses/Error"
@@ -66,13 +64,192 @@
         }
       }
     },
-    "/students/{id}": {
+    "/auth": {
+      "post": {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Authenticate applicant",
+        "operationId": "auth",
+        "requestBody": {
+          "description": "Application code",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OTP ID for verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pin_id": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/verify-otp": {
+      "post": {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Verify OTP",
+        "operationId": "verify-otp",
+        "requestBody": {
+          "description": "otp",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pin": {
+                    "type": "string"
+                  },
+                  "pin_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Token which contain user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/applicants": {
       "get": {
         "tags": [
-          "User"
+          "Applicant"
         ],
-        "summary": "Retrives a sigle record of a location by it ID",
-        "operationId": "get-location-by-id",
+        "summary": "Retrives Applicants",
+        "operationId": "get-all-applicants",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Applicant"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/applicants/update-profile": {
+      "patch": {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Update an applicant record",
+        "operationId": "applicant-update-profile",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Applicant"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Applicant"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/applicants/{id}": {
+      "get": {
+        "tags": [
+          "Applicant"
+        ],
+        "summary": "Retrives a sigle applicant record by it ID",
+        "operationId": "get-applicant-by-id",
         "security": [
           {
             "BearerAuth": []
@@ -82,7 +259,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "The location ID to be retrived",
+            "description": "The applicant ID to be retrived",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -93,7 +270,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/User"
+            "$ref": "#/components/responses/Applicant"
           },
           "400": {
             "$ref": "#/components/responses/Error"
@@ -114,10 +291,10 @@
       },
       "patch": {
         "tags": [
-          "User"
+          "Applicant"
         ],
-        "summary": "Updates an location record",
-        "operationId": "task-update",
+        "summary": "Updates an applicant record",
+        "operationId": "update-applicant",
         "security": [
           {
             "BearerAuth": []
@@ -127,7 +304,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "The location ID to be updated",
+            "description": "The applicant ID to be updated",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -137,20 +314,11 @@
           }
         ],
         "requestBody": {
-          "description": "For updating location",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              }
-            }
-          },
-          "required": true
+          "$ref": "#/components/requestBodies/Applicant"
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/User"
+            "$ref": "#/components/responses/Applicant"
           },
           "400": {
             "$ref": "#/components/responses/Error"
@@ -171,11 +339,11 @@
       },
       "delete": {
         "tags": [
-          "User"
+          "Applicant"
         ],
-        "summary": "Delete location",
-        "description": "Deletes an location record which matches the params ID given",
-        "operationId": "deleteTask",
+        "summary": "Delete applicant",
+        "description": "Deletes an applicant record which matches the params ID given",
+        "operationId": "delete-applicant",
         "security": [
           {
             "BearerAuth": []
@@ -196,7 +364,7 @@
         ],
         "responses": {
           "200": {
-            "$ref": "#/components/responses/User"
+            "$ref": "#/components/responses/Applicant"
           },
           "400": {
             "$ref": "#/components/responses/Error"
@@ -215,41 +383,214 @@
           }
         }
       }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Admin login",
+        "operationId": "login",
+        "requestBody": {
+          "description": "Email and Password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Admin"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/admin": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Create new admin",
+        "operationId": "create-admin",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Admin"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Admin"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Retrives all admin",
+        "operationId": "get-all-admin",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Admins"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/admin/update-profile": {
+      "patch": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update an admin record",
+        "operationId": "Admin-update-profile",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Admin"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Admin"
+          },
+          "400": {
+            "$ref": "#/components/responses/Error"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ServerError"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "User": {
+      "Applicant": {
         "type": "object",
         "properties": {
-          "name": {
+          "code": {
             "type": "string"
           },
-          "state": {
+          "firstName": {
             "type": "string"
           },
-          "country": {
+          "lastName": {
             "type": "string"
           },
-          "type": {
+          "email": {
             "type": "string"
           },
-          "coords": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "phoneNumber": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          }
+        }
+      },
+      "Admin": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
           }
         }
       }
     },
     "requestBodies": {
-      "User": {
-        "description": "needed to create the required location on success",
+      "Applicant": {
+        "description": "Needed to create the required applicant on success",
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/User"
+              "$ref": "#/components/schemas/Applicant"
+            }
+          }
+        },
+        "required": true
+      },
+      "Admin": {
+        "description": "Needed to create the required admin on success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Admin"
             }
           }
         },
@@ -257,7 +598,7 @@
       }
     },
     "responses": {
-      "User": {
+      "Applicant": {
         "description": "Successful operation",
         "content": {
           "application/json": {
@@ -269,7 +610,7 @@
                 },
                 "data": {
                   "type": "object",
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/Admin"
                 },
                 "message": {
                   "type": "string"
@@ -279,7 +620,7 @@
           }
         }
       },
-      "Users": {
+      "Applicants": {
         "description": "Successful operation",
         "content": {
           "application/json": {
@@ -293,7 +634,54 @@
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/Admin"
+                  }
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Admin": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number"
+                },
+                "data": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/Admin"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Admins": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/Admin"
                   }
                 },
                 "message": {

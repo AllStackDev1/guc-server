@@ -37,7 +37,11 @@ module.exports.factory = (
       route: 'enroll',
       methods: ['post'],
       middlewares: {
-        post: [ApplicantValidations.enroll, ApplicantController.insert]
+        post: [
+          ApplicantValidations.enroll,
+          ApplicantController.preInsert,
+          ApplicantController.insert
+        ]
       }
     },
     {
@@ -91,15 +95,16 @@ module.exports.factory = (
       }
     },
     {
-      route: 'create-admin',
-      methods: ['post'],
+      route: 'admin',
+      methods: ['post', 'get'],
       guard: true,
       middlewares: {
-        post: [hasAccess([ADMIN]), AdminValidations.create, AdminController.insert]
+        post: [hasAccess([ADMIN]), AdminValidations.create, AdminController.insert],
+        get: [hasAccess([ADMIN]), AdminValidations.querySearch, AdminController.get]
       }
     },
     {
-      route: 'update-profile',
+      route: 'admin/update-profile',
       methods: ['patch'],
       guard: true,
       middlewares: {

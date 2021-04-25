@@ -62,7 +62,7 @@ module.exports.factory = class extends BaseController {
     // method binding
     this.auth = this.auth.bind(this)
     this.verifyOTP = this.verifyOTP.bind(this)
-    this.getAA = this.getAA.bind(this)
+    this.preInsert = this.preInsert.bind(this)
   }
 
   async auth(req, res) {
@@ -94,16 +94,18 @@ module.exports.factory = class extends BaseController {
       const response = await this.termii.verifyOtp(req.body)
       if (response.verified !== 'True') throw new Error('OTP expired!')
       const applicant = await this.repo.getOne({ phoneNumber: '+' + response.msisdn })
-      const token = await applicant.generateToken()
+      const token = await applicant.generateAuthToken()
       this.response.successWithData(res, token)
     } catch (error) {
       this.response.error(res, error.message || error)
     }
   }
 
-  async getAA(req, res) {
+  async preInsert(req, res, next) {
     try {
-      this.response.success(res, 'just test')
+      const applicant = await this.repo.getOne({ phoneNumber: req.body.phoneNumber })
+      if (applicant) throw new Error('A user with this phone number already exist')
+      next()
     } catch (error) {
       this.response.error(res, error.message || error)
     }

@@ -18,7 +18,7 @@ module.exports.factory = mongoose => {
       },
       seq: {
         type: Number,
-        default: 10000
+        default: 100
       }
     },
     {
