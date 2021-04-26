@@ -1,2 +1,2 @@
 $ cat Procfile
-web: node src/start.js
+web: node src/app.js
