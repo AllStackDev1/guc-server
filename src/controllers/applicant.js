@@ -81,7 +81,7 @@ module.exports.factory = class extends BaseController {
       this.response.successWithData(
         res,
         response,
-        `Please wait for OTP sent to ${applicant.phoneNumber}`
+        'OTP Code has been sent to your registered phone number'
       )
     } catch (error) {
       this.response.error(res, error.message || error)
@@ -91,8 +91,8 @@ module.exports.factory = class extends BaseController {
   async verifyOTP(req, res) {
     try {
       const response = await this.termii.verifyOtp(req.body)
-      if (response.verified !== 'True') throw new Error('OTP expired!')
-      const applicant = await this.repo.getOne({ phoneNumber: '+' + response.msisdn })
+      if (response.verified !== 'true' && !response.msisdn) throw new Error('OTP expired!')
+      const applicant = await this.repo.getOne({ phoneNumber: response.msisdn })
       const token = await applicant.generateAuthToken()
       this.response.successWithData(res, token)
     } catch (error) {
@@ -117,7 +117,7 @@ module.exports.factory = class extends BaseController {
       const applicant = await this.repo.getOne({ phoneNumber: req.body.phoneNumber })
       if (!applicant) {
         throw new Error(
-          `No ${this.name.toLowerCase()} having this phone number: ${req.body.phoneNumber}`
+          `No ${this.name.toLowerCase()} found with this phone number: ${req.body.phoneNumber}`
         )
       }
       const { clientUrl, eImgLoc } = this.getEnvs(process.env.NODE_ENV)
@@ -133,7 +133,7 @@ module.exports.factory = class extends BaseController {
         }
       }
       await this.mailJet.applicationCodeEmail(payload)
-      this.response.success(res, `${this.name} code sent to ${applicant.email}`)
+      this.response.success(res, `Application code sent to ${applicant.email}`)
     } catch (error) {
       this.response.error(res, error.message || error)
     }

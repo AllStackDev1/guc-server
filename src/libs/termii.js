@@ -26,7 +26,7 @@ module.exports.factory = (getEnvs, helpers) => {
       message_type: 'NUMERIC',
       to,
       from: termiiId,
-      channel: 'dnd',
+      channel: 'generic',
       pin_attempts: 10,
       pin_time_to_live: 5,
       pin_length: 6,

@@ -32,7 +32,7 @@ module.exports.factory = (
    * @param { { post: Array<Function>, get: Array<Function>, patch: Array<Function>, put: Array<Function>, delete: Array<Function> } } middlewares request handlers
    */
   return [
-    // #region APPLICANT ROUTE
+    // #region APPLICANT ENDPOINTS
     {
       route: 'enroll',
       methods: ['post'],
@@ -93,7 +93,7 @@ module.exports.factory = (
     },
     // #endregion
 
-    // #region ADMIN AUTH ROUTE
+    // #region ADMIN AUTH ENDPOINTS
     {
       route: 'login',
       methods: ['post'],
@@ -107,7 +107,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [hasAccess([ADMIN]), AdminValidations.create, AdminController.insert],
-        get: [hasAccess([ADMIN]), AdminValidations.querySearch, AdminController.get]
+        get: [hasAccess([ADMIN]), AdminController.get]
       }
     },
     {

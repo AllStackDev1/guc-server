@@ -40,16 +40,9 @@ module.exports.factory = _celebrate => {
     })
   })
 
-  const querySearch = celebrate({
-    query: Joi.object().keys({
-      email: Joi.string().email({ minDomainSegments: 2 })
-    })
-  })
-
   return {
     login,
     create,
-    patch,
-    querySearch
+    patch
   }
 }
