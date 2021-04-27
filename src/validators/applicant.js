@@ -19,7 +19,7 @@ module.exports.factory = _celebrate => {
         .required(),
       email: Joi.string().email({ minDomainSegments: 2 }).required(),
       phoneNumber: Joi.string()
-        .regex(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/)
+        .regex(/(^[0]\d{10}$)|(^[+]?[234]\d{12}$)/)
         .required()
     })
   })
