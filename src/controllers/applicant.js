@@ -53,7 +53,7 @@ module.exports.factory = class extends BaseController {
           link: clientUrl + '/login?code=' + doc.code
         }
       }
-      this.mailJet.welcomeEmail(payload)
+      // this.mailJet.welcomeEmail(payload)
       this.mailJet.applicationCodeEmail(payload)
     })
 
@@ -129,7 +129,7 @@ module.exports.factory = class extends BaseController {
           images: eImgLoc,
           firstName: applicant.firstName,
           year: new Date().getFullYear(),
-          link: clientUrl + '/login?code=' + applicant.code
+          link: clientUrl + '/application-process?code=' + applicant.code
         }
       }
       await this.mailJet.applicationCodeEmail(payload)

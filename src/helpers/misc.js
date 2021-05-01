@@ -25,6 +25,11 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
     ADMIN: 'ADMIN'
   }
 
+  const Status = {
+    PENDING: 'PENDING',
+    PAID: 'PAID'
+  }
+
   // headers: { Accept: 'application/json', Authorization: authorization},
   const ajax = async (url, headers, body, method = 'GET') =>
     await fetch(url, { method, headers, body }).then(res => res.json())
@@ -35,6 +40,7 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
 
   return {
     ajax,
+    Status,
     getDate,
     readFile,
     dateTime,

@@ -39,6 +39,11 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
         unique: true,
         required: [true, 'phone number is a required field']
       },
+      stage: {
+        type: Number,
+        default: 5,
+        enum: [5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12]
+      },
       avatar: String
     },
     {
@@ -77,7 +82,15 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
   schema.methods.toJSON = function () {
     const applicant = this
     const applicantObject = applicant.toObject()
-    return pick(applicantObject, ['_id', 'email', 'code', 'firstName', 'lastName', 'avatar'])
+    return pick(applicantObject, [
+      '_id',
+      'email',
+      'code',
+      'firstName',
+      'lastName',
+      'stage',
+      'avatar'
+    ])
   }
 
   schema.methods.generateAuthToken = function () {

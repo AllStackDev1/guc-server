@@ -11,6 +11,10 @@ module.exports.dependencies = [
   'AdminValidations',
   'ApplicantController',
   'ApplicantValidations',
+  'InitialEnquiryController',
+  'InitialEnquiryValidations',
+  'PreviousSchoolController',
+  'PreviousSchoolValidations',
   'MiscValidations',
   'hasAccess',
   'miscHelpers'
@@ -20,6 +24,10 @@ module.exports.factory = (
   AdminValidations,
   ApplicantController,
   ApplicantValidations,
+  InitialEnquiryController,
+  InitialEnquiryValidations,
+  PreviousSchoolController,
+  PreviousSchoolValidations,
   MiscValidations,
   hasAccess,
   Helpers
@@ -32,7 +40,7 @@ module.exports.factory = (
    * @param { { post: Array<Function>, get: Array<Function>, patch: Array<Function>, put: Array<Function>, delete: Array<Function> } } middlewares request handlers
    */
   return [
-    // #region APPLICANT ENDPOINTS
+    // #region APPLICANT AUTH ENDPOINTS
     {
       route: 'enroll',
       methods: ['post'],
@@ -116,6 +124,78 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         patch: [hasAccess([ADMIN]), AdminValidations.patch, AdminController.update]
+      }
+    },
+    // #endregion
+
+    // #region INITIAL ENQUIRIES ENDPOINTS
+    {
+      route: 'initial-enquiries',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          InitialEnquiryController.preInsert,
+          InitialEnquiryValidations.post,
+          InitialEnquiryController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          InitialEnquiryController.preGet,
+          InitialEnquiryValidations.querySearch,
+          InitialEnquiryController.getOne
+        ]
+      }
+    },
+    {
+      route: 'initial-enquiries/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          InitialEnquiryValidations.put,
+          InitialEnquiryController.update
+        ],
+        delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, InitialEnquiryController.delete]
+      }
+    },
+    // #endregion
+
+    // #region PREVIOUS SCHOOL ENDPOINTS
+    {
+      route: 'previous-schools',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          PreviousSchoolController.preInsert,
+          PreviousSchoolValidations.post,
+          PreviousSchoolController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          PreviousSchoolController.preGet,
+          PreviousSchoolValidations.querySearch,
+          PreviousSchoolController.get
+        ]
+      }
+    },
+    {
+      route: 'previous-schools/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          PreviousSchoolValidations.put,
+          PreviousSchoolController.update
+        ],
+        delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, PreviousSchoolController.delete]
       }
     }
     // #endregion
