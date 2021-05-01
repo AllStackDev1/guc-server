@@ -13,6 +13,7 @@ module.exports.dependencies = [
   'EmergencyContactRepository',
   'ApplicantRepository',
   'MailJet',
+  'envs',
   'miscHelpers',
   'logger',
   'response',
@@ -25,17 +26,19 @@ module.exports.factory = class extends BaseController {
    * @param {object} applicantRepo The repository which will handle the operations to be
    * performed in this controller
    * @param {object} mailJet - mailing function object
+   * @param {object} getEnvs - env object
    * @param {object} helper - helper functions object
    * @param {object} logger - logger functions
    * @param {object} response - response handler function object
    * @param {object} mongoose mongodb middleware
    */
-  constructor(repo, applicantRepo, mailJet, helper, logger, response, mongoose) {
+  constructor(repo, applicantRepo, mailJet, getEnvs, helper, logger, response, mongoose) {
     super(repo, mongoose, helper, logger, response)
     this.name = 'Emergency contact'
     this.listening = true
     this.applicantRepo = applicantRepo
     this.mailJet = mailJet
+    this.getEnvs = getEnvs
 
     this.preGet = this.preGet.bind(this)
     this.preInsert = this.preInsert.bind(this)
