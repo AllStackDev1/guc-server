@@ -5,13 +5,21 @@
  */
 
 module.exports.name = 'ApplicantModel'
-module.exports.dependencies = ['mongoose', 'jsonwebtoken', 'lodash', 'GenerateCode', 'envs']
-module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
+module.exports.dependencies = [
+  'mongoose',
+  'jsonwebtoken',
+  'lodash',
+  'GenerateCode',
+  'envs',
+  'miscHelpers'
+]
+module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers) => {
   'use strict'
 
   const Schema = mongoose.Schema
   const { pick, upperFirst } = lodash
   const { secret, expiresIn } = getEnvs(process.env.NODE_ENV)
+  const { PENDING, PAID } = helpers.Status
 
   // Define schema for Applicant Model
   const schema = new Schema(
@@ -43,6 +51,11 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
         type: Number,
         default: 5,
         enum: [5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12]
+      },
+      status: {
+        type: String,
+        default: PENDING,
+        enum: [PENDING, PAID]
       },
       avatar: String
     },
@@ -88,6 +101,7 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs) => {
       'code',
       'firstName',
       'lastName',
+      'status',
       'stage',
       'avatar'
     ])

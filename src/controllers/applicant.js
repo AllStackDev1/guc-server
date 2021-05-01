@@ -53,7 +53,6 @@ module.exports.factory = class extends BaseController {
           link: clientUrl + '/login?code=' + doc.code
         }
       }
-      // this.mailJet.welcomeEmail(payload)
       this.mailJet.applicationCodeEmail(payload)
     })
 

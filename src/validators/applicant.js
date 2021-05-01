@@ -3,11 +3,12 @@
  * @author Chinedu Ekene Okpala
  */
 module.exports.name = 'ApplicantValidations'
-module.exports.dependencies = ['celebrate']
-module.exports.factory = _celebrate => {
+module.exports.dependencies = ['celebrate', 'miscHelpers']
+module.exports.factory = (_celebrate, helpers) => {
   'use strict'
 
   const { celebrate, Joi } = _celebrate
+  const { PENDING, PAID } = helpers.Status
 
   const enroll = celebrate({
     body: Joi.object().keys({
@@ -29,6 +30,7 @@ module.exports.factory = _celebrate => {
       firstName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
       lastName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
       email: Joi.string().email({ minDomainSegments: 2 }),
+      status: Joi.string().valid(PENDING, PAID),
       stage: Joi.number().valid(5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12)
     })
   })

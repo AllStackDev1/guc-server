@@ -1,8 +1,8 @@
 /**
- * PreviousSchool Validations. Defining user validations schema using celebrate
+ * Sibling Validations. Defining user validations schema using celebrate
  * @author Chinedu Ekene Okpala
  */
-module.exports.name = 'PreviousSchoolValidations'
+module.exports.name = 'SiblingValidations'
 module.exports.dependencies = ['celebrate']
 module.exports.factory = _celebrate => {
   'use strict'
@@ -11,23 +11,19 @@ module.exports.factory = _celebrate => {
 
   const post = celebrate({
     body: Joi.object().keys({
+      dob: Joi.string().required(),
       name: Joi.string().required(),
-      email: Joi.string().required(),
-      address: Joi.string().required(),
-      applicant: Joi.string().required(),
-      dateOfArrival: Joi.string().required(),
-      dateOfLeaving: Joi.string().required()
+      gender: Joi.string().required(),
+      applicant: Joi.string().required()
     })
   })
 
   const put = celebrate({
     body: Joi.object().keys({
+      dob: Joi.string().required(),
       name: Joi.string().required(),
-      email: Joi.string().required(),
-      address: Joi.string().required(),
-      applicant: Joi.string().required(),
-      dateOfArrival: Joi.string().required(),
-      dateOfLeaving: Joi.string().required()
+      gender: Joi.string().required(),
+      applicant: Joi.string().required()
     })
   })
 

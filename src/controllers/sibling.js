@@ -4,13 +4,13 @@ const BaseController = require('./base')
 
 /**
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
- * @summary Controller to handle http request for PreviousSchool model related functions
- * @name PreviousSchoolController
+ * @summary Controller to handle http request for Sibling model related functions
+ * @name SiblingController
  * @extends BaseController
  */
-module.exports.name = 'PreviousSchoolController'
+module.exports.name = 'SiblingController'
 module.exports.dependencies = [
-  'PreviousSchoolRepository',
+  'SiblingRepository',
   'ApplicantRepository',
   'miscHelpers',
   'logger',
@@ -30,7 +30,7 @@ module.exports.factory = class extends BaseController {
    */
   constructor(repo, applicantRepo, helper, logger, response, mongoose) {
     super(repo, mongoose, helper, logger, response)
-    this.name = 'Previous school'
+    this.name = 'Sibling'
     this.listening = true
     this.applicantRepo = applicantRepo
 
@@ -41,7 +41,7 @@ module.exports.factory = class extends BaseController {
     // events
     this.on('insert', async (req, doc) => {
       try {
-        await this.applicantRepo.update(doc.applicant, { stage: 7 })
+        await this.applicantRepo.update(doc.applicant, { stage: 8.2 })
       } catch (error) {
         this.log(error)
       }

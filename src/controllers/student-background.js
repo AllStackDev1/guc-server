@@ -4,13 +4,13 @@ const BaseController = require('./base')
 
 /**
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
- * @summary Controller to handle http request for PreviousSchool model related functions
- * @name PreviousSchoolController
+ * @summary Controller to handle http request for StudentBackground model related functions
+ * @name StudentBackgroundController
  * @extends BaseController
  */
-module.exports.name = 'PreviousSchoolController'
+module.exports.name = 'StudentBackgroundController'
 module.exports.dependencies = [
-  'PreviousSchoolRepository',
+  'StudentBackgroundRepository',
   'ApplicantRepository',
   'miscHelpers',
   'logger',
@@ -30,18 +30,17 @@ module.exports.factory = class extends BaseController {
    */
   constructor(repo, applicantRepo, helper, logger, response, mongoose) {
     super(repo, mongoose, helper, logger, response)
-    this.name = 'Previous school'
+    this.name = 'Student background'
     this.listening = true
     this.applicantRepo = applicantRepo
 
     this.preGet = this.preGet.bind(this)
     this.preInsert = this.preInsert.bind(this)
-    this.preUpdate = this.preUpdate.bind(this)
 
     // events
     this.on('insert', async (req, doc) => {
       try {
-        await this.applicantRepo.update(doc.applicant, { stage: 7 })
+        await this.applicantRepo.update(doc.applicant, { stage: 8.1 })
       } catch (error) {
         this.log(error)
       }
@@ -58,13 +57,6 @@ module.exports.factory = class extends BaseController {
   async preGet(req, res, next) {
     if (req.user.code) {
       req.query.applicant = req.user._id
-    }
-    next()
-  }
-
-  async preUpdate(req, res, next) {
-    if (req.user.code) {
-      req.body.applicant = req.user._id
     }
     next()
   }

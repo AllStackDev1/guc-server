@@ -6,5 +6,10 @@ module.exports = [
   require('./admin'),
   require('./applicant'),
   require('./initial-enquiry'),
-  require('./previous-school')
+  require('./previous-school'),
+  require('./student-background'),
+  require('./sibling'),
+  require('./health-and-medical'),
+  require('./guardian-contact-information'),
+  require('./emergency-contact')
 ]

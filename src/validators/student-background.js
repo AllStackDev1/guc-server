@@ -1,8 +1,8 @@
 /**
- * PreviousSchool Validations. Defining user validations schema using celebrate
+ * StudentBackground Validations. Defining user validations schema using celebrate
  * @author Chinedu Ekene Okpala
  */
-module.exports.name = 'PreviousSchoolValidations'
+module.exports.name = 'StudentBackgroundValidations'
 module.exports.dependencies = ['celebrate']
 module.exports.factory = _celebrate => {
   'use strict'
@@ -11,23 +11,17 @@ module.exports.factory = _celebrate => {
 
   const post = celebrate({
     body: Joi.object().keys({
-      name: Joi.string().required(),
-      email: Joi.string().required(),
-      address: Joi.string().required(),
       applicant: Joi.string().required(),
-      dateOfArrival: Joi.string().required(),
-      dateOfLeaving: Joi.string().required()
+      specialNeeds: Joi.string().required(),
+      enrollNetwork: Joi.string().required()
     })
   })
 
   const put = celebrate({
     body: Joi.object().keys({
-      name: Joi.string().required(),
-      email: Joi.string().required(),
-      address: Joi.string().required(),
       applicant: Joi.string().required(),
-      dateOfArrival: Joi.string().required(),
-      dateOfLeaving: Joi.string().required()
+      specialNeeds: Joi.string().required(),
+      enrollNetwork: Joi.string().required()
     })
   })
 

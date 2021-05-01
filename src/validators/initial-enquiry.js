@@ -11,7 +11,7 @@ module.exports.factory = _celebrate => {
 
   const post = celebrate({
     body: Joi.object().keys({
-      applicant: Joi.string(),
+      applicant: Joi.string().required(),
       documents: Joi.object()
         .keys({
           birthCertOrPassport: Joi.string().required(),
@@ -22,7 +22,7 @@ module.exports.factory = _celebrate => {
       studentInfo: Joi.object()
         .keys({
           firstName: Joi.string().required(),
-          surName: Joi.string().required(),
+          surname: Joi.string().required(),
           middleName: Joi.string().required(),
           preferedName: Joi.string().required(),
           dob: Joi.string().required(),
@@ -40,6 +40,7 @@ module.exports.factory = _celebrate => {
 
   const put = celebrate({
     body: Joi.object().keys({
+      applicant: Joi.string().required(),
       documents: Joi.object()
         .keys({
           birthCertOrPassport: Joi.string().required(),
@@ -50,7 +51,7 @@ module.exports.factory = _celebrate => {
       studentInfo: Joi.object()
         .keys({
           firstName: Joi.string().required(),
-          surName: Joi.string().required(),
+          surname: Joi.string().required(),
           middleName: Joi.string().required(),
           preferedName: Joi.string().required(),
           dob: Joi.string().required(),

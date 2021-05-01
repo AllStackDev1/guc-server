@@ -15,6 +15,16 @@ module.exports.dependencies = [
   'InitialEnquiryValidations',
   'PreviousSchoolController',
   'PreviousSchoolValidations',
+  'StudentBackgroundController',
+  'StudentBackgroundValidations',
+  'SiblingController',
+  'SiblingValidations',
+  'HealthAndMedicalController',
+  'HealthAndMedicalValidations',
+  'GuardianContactInformationController',
+  'GuardianContactInformationValidations',
+  'EmergencyContactController',
+  'EmergencyContactValidations',
   'MiscValidations',
   'hasAccess',
   'miscHelpers'
@@ -28,6 +38,16 @@ module.exports.factory = (
   InitialEnquiryValidations,
   PreviousSchoolController,
   PreviousSchoolValidations,
+  StudentBackgroundController,
+  StudentBackgroundValidations,
+  SiblingController,
+  SiblingValidations,
+  HealthAndMedicalController,
+  HealthAndMedicalValidations,
+  GuardianContactInformationController,
+  GuardianContactInformationValidations,
+  EmergencyContactController,
+  EmergencyContactValidations,
   MiscValidations,
   hasAccess,
   Helpers
@@ -159,7 +179,7 @@ module.exports.factory = (
           InitialEnquiryValidations.put,
           InitialEnquiryController.update
         ],
-        delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, InitialEnquiryController.delete]
+        delete: [hasAccess([ADMIN]), MiscValidations.id, InitialEnquiryController.delete]
       }
     },
     // #endregion
@@ -191,11 +211,205 @@ module.exports.factory = (
       middlewares: {
         put: [
           hasAccess([APPLICANT, ADMIN]),
+          PreviousSchoolController.preUpdate,
           MiscValidations.id,
           PreviousSchoolValidations.put,
           PreviousSchoolController.update
         ],
         delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, PreviousSchoolController.delete]
+      }
+    },
+    // #endregion
+
+    // #region INITIAL ENQUIRIES ENDPOINTS
+    {
+      route: 'student-backgrounds',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          StudentBackgroundController.preInsert,
+          StudentBackgroundValidations.post,
+          StudentBackgroundController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          StudentBackgroundController.preGet,
+          StudentBackgroundValidations.querySearch,
+          StudentBackgroundController.getOne
+        ]
+      }
+    },
+    {
+      route: 'student-backgrounds/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          StudentBackgroundValidations.put,
+          StudentBackgroundController.update
+        ],
+        delete: [hasAccess([ADMIN]), MiscValidations.id, StudentBackgroundController.delete]
+      }
+    },
+    // #endregion
+
+    // #region SIBLINGS ENDPOINTS
+    {
+      route: 'siblings',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          SiblingController.preInsert,
+          SiblingValidations.post,
+          SiblingController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          SiblingController.preGet,
+          SiblingValidations.querySearch,
+          SiblingController.get
+        ]
+      }
+    },
+    {
+      route: 'siblings/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          SiblingController.preUpdate,
+          MiscValidations.id,
+          SiblingValidations.put,
+          SiblingController.update
+        ],
+        delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, SiblingController.delete]
+      }
+    },
+    // #endregion
+
+    // #region HEALTH AND MEDICAL ENDPOINTS
+    {
+      route: 'healths-and-medicals',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          HealthAndMedicalController.preInsert,
+          HealthAndMedicalValidations.post,
+          HealthAndMedicalController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          HealthAndMedicalController.preGet,
+          HealthAndMedicalValidations.querySearch,
+          HealthAndMedicalController.getOne
+        ]
+      }
+    },
+    {
+      route: 'healths-and-medicals/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          HealthAndMedicalValidations.put,
+          HealthAndMedicalController.update
+        ],
+        delete: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          HealthAndMedicalController.delete
+        ]
+      }
+    },
+    // #endregion
+
+    // #region GUARDING CONTACT INFORMATION ENDPOINTS
+    {
+      route: 'guardian-contact-informations',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          GuardianContactInformationController.preInsert,
+          GuardianContactInformationValidations.post,
+          GuardianContactInformationController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          GuardianContactInformationController.preGet,
+          GuardianContactInformationValidations.querySearch,
+          GuardianContactInformationController.getOne
+        ]
+      }
+    },
+    {
+      route: 'guardian-contact-informations/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          GuardianContactInformationValidations.put,
+          GuardianContactInformationController.update
+        ],
+        delete: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          GuardianContactInformationController.delete
+        ]
+      }
+    },
+    // #endregion
+
+    // #region EMERGENCY CONTACT ENDPOINTS
+    {
+      route: 'emergency-contacts',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([APPLICANT, ADMIN]),
+          EmergencyContactController.preInsert,
+          EmergencyContactValidations.post,
+          EmergencyContactController.insert
+        ],
+        get: [
+          hasAccess([APPLICANT, ADMIN]),
+          EmergencyContactController.preGet,
+          EmergencyContactValidations.querySearch,
+          EmergencyContactController.getOne
+        ]
+      }
+    },
+    {
+      route: 'emergency-contacts/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          EmergencyContactValidations.put,
+          EmergencyContactController.update
+        ],
+        delete: [
+          hasAccess([APPLICANT, ADMIN]),
+          MiscValidations.id,
+          EmergencyContactController.delete
+        ]
       }
     }
     // #endregion
