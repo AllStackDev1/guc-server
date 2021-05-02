@@ -155,7 +155,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           InitialEnquiryController.preInsert,
           InitialEnquiryValidations.post,
           InitialEnquiryController.insert
@@ -191,7 +191,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           PreviousSchoolController.preInsert,
           PreviousSchoolValidations.post,
           PreviousSchoolController.insert
@@ -221,14 +221,14 @@ module.exports.factory = (
     },
     // #endregion
 
-    // #region INITIAL ENQUIRIES ENDPOINTS
+    // #region STUDENT BACKGROUND ENDPOINTS
     {
       route: 'student-backgrounds',
       methods: ['post', 'get'],
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           StudentBackgroundController.preInsert,
           StudentBackgroundValidations.post,
           StudentBackgroundController.insert
@@ -264,7 +264,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           SiblingController.preInsert,
           SiblingValidations.post,
           SiblingController.insert
@@ -301,7 +301,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           HealthAndMedicalController.preInsert,
           HealthAndMedicalValidations.post,
           HealthAndMedicalController.insert
@@ -341,7 +341,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           GuardianContactInformationController.preInsert,
           GuardianContactInformationValidations.post,
           GuardianContactInformationController.insert
@@ -360,7 +360,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         put: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           MiscValidations.id,
           GuardianContactInformationValidations.put,
           GuardianContactInformationController.update
@@ -381,7 +381,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [
-          hasAccess([APPLICANT, ADMIN]),
+          hasAccess([APPLICANT]),
           EmergencyContactController.preInsert,
           EmergencyContactValidations.post,
           EmergencyContactController.insert

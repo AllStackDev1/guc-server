@@ -65,10 +65,13 @@ module.exports.factory = class extends BaseController {
   }
 
   async preInsert(req, res, next) {
-    if (req.user.code) {
+    const { PAID } = this.helper.Status
+    if (req.user.code && req.user.status === PAID) {
       req.body.applicant = req.user._id
+      next()
+    } else {
+      this.response.error(res, 'Payment is required to process with this stage.')
     }
-    next()
   }
 
   async preGet(req, res, next) {

@@ -40,7 +40,7 @@ module.exports.factory = mongoose => {
           type: String,
           required: true
         },
-        surname: {
+        familyName: {
           type: String,
           required: true
         },

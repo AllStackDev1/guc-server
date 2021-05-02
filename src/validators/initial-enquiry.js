@@ -22,7 +22,7 @@ module.exports.factory = _celebrate => {
       studentInfo: Joi.object()
         .keys({
           firstName: Joi.string().required(),
-          surname: Joi.string().required(),
+          familyName: Joi.string().required(),
           middleName: Joi.string().required(),
           preferedName: Joi.string().required(),
           dob: Joi.string().required(),
@@ -51,7 +51,7 @@ module.exports.factory = _celebrate => {
       studentInfo: Joi.object()
         .keys({
           firstName: Joi.string().required(),
-          surname: Joi.string().required(),
+          familyName: Joi.string().required(),
           middleName: Joi.string().required(),
           preferedName: Joi.string().required(),
           dob: Joi.string().required(),

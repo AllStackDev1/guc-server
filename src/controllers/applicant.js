@@ -74,7 +74,7 @@ module.exports.factory = class extends BaseController {
       const response = await this.termii.sendOtp(applicant.phoneNumber)
       if (response.message) {
         this.log(response.message)
-        throw new Error('Unexpected error, please try again')
+        throw new Error('Unexpected error, please try again or contact support.')
       }
 
       this.response.successWithData(
