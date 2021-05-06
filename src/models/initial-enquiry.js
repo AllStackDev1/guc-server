@@ -80,8 +80,7 @@ module.exports.factory = mongoose => {
           required: true
         },
         religion: {
-          type: String,
-          required: true
+          type: String
         }
       }
     },

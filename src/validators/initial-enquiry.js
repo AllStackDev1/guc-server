@@ -32,7 +32,7 @@ module.exports.factory = _celebrate => {
           dualNationality: Joi.string().allow(''),
           firstLanguage: Joi.string().required(),
           homeLanguage: Joi.string().required(),
-          religion: Joi.string().required()
+          religion: Joi.string().allow('')
         })
         .required()
     })
@@ -61,7 +61,7 @@ module.exports.factory = _celebrate => {
           dualNationality: Joi.string().allow(''),
           firstLanguage: Joi.string().required(),
           homeLanguage: Joi.string().required(),
-          religion: Joi.string().required()
+          religion: Joi.string().allow('')
         })
         .required()
     })

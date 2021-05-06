@@ -22,6 +22,10 @@
     {
       "url": "https://guc-webserver-test.herokuapp.com/api/v1/",
       "description": "Staging server"
+    },
+    {
+      "url": "https://api.thegcu.com/api/v1/",
+      "description": "Production server"
     }
   ],
   "externalDocs": {

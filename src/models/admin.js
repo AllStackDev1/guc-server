@@ -59,7 +59,7 @@ module.exports.factory = (mongoose, bcrypt, jwt, lodash, getEnvs) => {
   schema.methods.toJSON = function () {
     const admin = this
     const adminObject = admin.toObject()
-    return pick(adminObject, ['_id', 'email', 'email', 'firstName', 'lastName', 'role', 'avatar'])
+    return pick(adminObject, ['_id', 'email', 'firstName', 'lastName', 'avatar'])
   }
 
   schema.methods.generateAuthToken = function (eIn) {

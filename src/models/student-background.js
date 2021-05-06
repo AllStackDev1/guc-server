@@ -25,9 +25,8 @@ module.exports.factory = mongoose => {
         type: String,
         required: true
       },
-      enrollNetwork: {
-        type: String,
-        required: true
+      details: {
+        type: String
       }
     },
     {

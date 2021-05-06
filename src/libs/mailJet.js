@@ -62,7 +62,7 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
       const content = replaceDoubleBraces(html, data)
       return await sendMail({ ...rest, subject: 'Application code', content })
     } catch (error) {
-      this.logger.getLogger().error(error)
+      logger.getLogger().error(error)
     }
   }
 
@@ -72,7 +72,7 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
       const content = replaceDoubleBraces(html, data)
       return await sendMail({ ...rest, subject: 'Welcome Email', content })
     } catch (error) {
-      this.logger.getLogger().error(error)
+      logger.getLogger().error(error)
     }
   }
 

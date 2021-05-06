@@ -13,7 +13,7 @@ module.exports.factory = _celebrate => {
     body: Joi.object().keys({
       applicant: Joi.string().required(),
       specialNeeds: Joi.string().required(),
-      enrollNetwork: Joi.string().required()
+      details: Joi.string()
     })
   })
 
@@ -21,7 +21,7 @@ module.exports.factory = _celebrate => {
     body: Joi.object().keys({
       applicant: Joi.string().required(),
       specialNeeds: Joi.string().required(),
-      enrollNetwork: Joi.string().required()
+      details: Joi.string()
     })
   })
 
