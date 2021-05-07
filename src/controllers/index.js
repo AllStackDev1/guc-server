@@ -11,5 +11,6 @@ module.exports = [
   require('./sibling'),
   require('./health-and-medical'),
   require('./guardian-contact-information'),
-  require('./emergency-contact')
+  require('./emergency-contact'),
+  require('./download-list')
 ]

@@ -66,6 +66,12 @@ module.exports.factory = (_celebrate, helpers) => {
     })
   })
 
+  const deleteApplicants = celebrate({
+    body: Joi.array().items({
+      _id: Joi.string().required()
+    })
+  })
+
   return {
     auth,
     patch,
@@ -73,6 +79,7 @@ module.exports.factory = (_celebrate, helpers) => {
     verifyOTP,
     resendOTP,
     resendCode,
-    querySearch
+    querySearch,
+    deleteApplicants
   }
 }

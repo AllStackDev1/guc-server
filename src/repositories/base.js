@@ -26,6 +26,8 @@ class BaseRepository {
     this.insert = this.insert.bind(this)
     this.update = this.update.bind(this)
     this.delete = this.delete.bind(this)
+    this.deleteOne = this.deleteOne.bind(this)
+    this.removeMany = this.removeMany.bind(this)
     this.aggregate = this.aggregate.bind(this)
   }
 
@@ -142,6 +144,21 @@ class BaseRepository {
   async deleteOne(...query) {
     try {
       return await this.model.findOneAndRemove(...query)
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
+  /**
+   * @description Delete many record from a collection (model)
+   * that fulfills the query params
+   *
+   * @param {*} query the query to filter which of the record will be deleted
+   * @return { Promise<object> } The deleted record
+   */
+  async removeMany(...query) {
+    try {
+      return await this.model.deleteMany(...query)
     } catch (error) {
       return Promise.reject(error)
     }

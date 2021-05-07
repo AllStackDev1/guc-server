@@ -25,6 +25,8 @@ module.exports.dependencies = [
   'GuardianContactInformationValidations',
   'EmergencyContactController',
   'EmergencyContactValidations',
+  'DownloadListValidations',
+  'DownloadListController',
   'MiscValidations',
   'hasAccess',
   'miscHelpers'
@@ -48,6 +50,8 @@ module.exports.factory = (
   GuardianContactInformationValidations,
   EmergencyContactController,
   EmergencyContactValidations,
+  DownloadListValidations,
+  DownloadListController,
   MiscValidations,
   hasAccess,
   Helpers
@@ -102,6 +106,18 @@ module.exports.factory = (
       }
     },
     {
+      route: 'applicants/bulk-delete',
+      methods: ['post'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([ADMIN]),
+          ApplicantValidations.deleteApplicants,
+          ApplicantController.deleteApplicants
+        ]
+      }
+    },
+    {
       route: 'applicants/update-profile',
       methods: ['patch'],
       guard: true,
@@ -114,7 +130,7 @@ module.exports.factory = (
       methods: ['get', 'patch', 'delete'],
       guard: true,
       middlewares: {
-        get: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.getById],
+        get: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.fetchApplicantDetails],
         patch: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.update],
         delete: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.delete]
       }
@@ -410,6 +426,52 @@ module.exports.factory = (
           MiscValidations.id,
           EmergencyContactController.delete
         ]
+      }
+    },
+    // #endregion
+
+    // #region DOWNLOAD LIST ENDPOINTS
+    {
+      route: 'download-lists',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [hasAccess([ADMIN]), DownloadListValidations.post, DownloadListController.insert],
+        get: [hasAccess([ADMIN]), DownloadListController.fetch]
+      }
+    },
+    {
+      route: 'download-lists/bulk-delete',
+      methods: ['post'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([ADMIN]),
+          DownloadListValidations.deleteDownloadLists,
+          DownloadListController.deleteDownloadLists
+        ]
+      }
+    },
+    {
+      route: 'download-lists/drop',
+      methods: ['delete'],
+      guard: true,
+      middlewares: {
+        delete: [hasAccess([ADMIN]), DownloadListController.drop]
+      }
+    },
+    {
+      route: 'download-lists/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([ADMIN]),
+          MiscValidations.id,
+          DownloadListValidations.put,
+          DownloadListController.update
+        ],
+        delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, DownloadListController.delete]
       }
     }
     // #endregion

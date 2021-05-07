@@ -36,7 +36,7 @@ module.exports.factory = _celebrate => {
   const login = celebrate({
     body: Joi.object().keys({
       email: Joi.string().email({ minDomainSegments: 2 }),
-      password: Joi.string().regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+      password: Joi.string()
     })
   })
 

@@ -101,6 +101,8 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
       'code',
       'firstName',
       'lastName',
+      'phoneNumber',
+      'createdAt',
       'status',
       'stage',
       'avatar'

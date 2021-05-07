@@ -11,6 +11,14 @@ const BaseController = require('./base')
 module.exports.name = 'ApplicantController'
 module.exports.dependencies = [
   'ApplicantRepository',
+  'InitialEnquiryRepository',
+  'PreviousSchoolRepository',
+  'StudentBackgroundRepository',
+  'SiblingRepository',
+  'HealthAndMedicalRepository',
+  'GuardianContactInformationRepository',
+  'EmergencyContactRepository',
+  'DownloadListRepository',
   'MailJet',
   'Termii',
   'envs',
@@ -23,6 +31,14 @@ module.exports.factory = class extends BaseController {
   /**
    * @param {object} repo The repository which will handle the operations to be
    * performed in this controller
+   * @param {object} initialEnquiryRepo
+   * @param {object} previousSchoolRepo
+   * @param {object} studentBackgroundRepo
+   * @param {object} siblingRepos
+   * @param {object} healthAndMedicalRepo
+   * @param {object} guardianContactInformationRepo
+   * @param {object} emergencyContactRepo
+   * @param {object} downloadListRepo
    * @param {object} mailJet - mailing function object
    * @param {object} termii - otp functions object
    * @param {object} getEnvs - env object
@@ -31,13 +47,39 @@ module.exports.factory = class extends BaseController {
    * @param {object} response - response handler function object
    * @param {object} mongoose mongodb middleware
    */
-  constructor(repo, mailJet, termii, getEnvs, helper, logger, response, mongoose) {
+  constructor(
+    repo,
+    initialEnquiryRepo,
+    previousSchoolRepo,
+    studentBackgroundRepo,
+    siblingRepos,
+    healthAndMedicalRepo,
+    guardianContactInformationRepo,
+    emergencyContactRepo,
+    downloadListRepo,
+    mailJet,
+    termii,
+    getEnvs,
+    helper,
+    logger,
+    response,
+    mongoose
+  ) {
     super(repo, mongoose, helper, logger, response)
     this.name = 'Applicant'
     this.listening = true
     this.mailJet = mailJet
     this.termii = termii
     this.getEnvs = getEnvs
+
+    this.initialEnquiryRepo = initialEnquiryRepo
+    this.previousSchoolRepo = previousSchoolRepo
+    this.studentBackgroundRepo = studentBackgroundRepo
+    this.siblingRepos = siblingRepos
+    this.healthAndMedicalRepo = healthAndMedicalRepo
+    this.guardianContactInformationRepo = guardianContactInformationRepo
+    this.emergencyContactRepo = emergencyContactRepo
+    this.downloadListRepo = downloadListRepo
 
     // events
     this.on('insert', (req, doc) => {
@@ -56,11 +98,29 @@ module.exports.factory = class extends BaseController {
       this.mailJet.applicationCodeEmail(payload)
     })
 
+    this.on('delete', async (req, doc) => {
+      try {
+        const query = { applicant: doc._id }
+        await this.initialEnquiryRepo.deleteOne(query)
+        await this.previousSchoolRepo.removeMany(query)
+        await this.studentBackgroundRepo.deleteOne(query)
+        await this.siblingRepos.removeMany(query)
+        await this.healthAndMedicalRepo.deleteOne(query)
+        await this.guardianContactInformationRepo.deleteOne(query)
+        await this.emergencyContactRepo.deleteOne(query)
+        await this.downloadListRepo.deleteOne(query)
+      } catch (error) {
+        this.log(error)
+      }
+    })
+
     // method binding
     this.auth = this.auth.bind(this)
     this.verifyOTP = this.verifyOTP.bind(this)
     this.preInsert = this.preInsert.bind(this)
     this.resendCode = this.resendCode.bind(this)
+    this.deleteApplicants = this.deleteApplicants.bind(this)
+    this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
   }
 
   async auth(req, res) {
@@ -133,6 +193,50 @@ module.exports.factory = class extends BaseController {
       }
       await this.mailJet.applicationCodeEmail(payload)
       this.response.success(res, `Application code sent to ${applicant.email}`)
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  /**
+   * @summary Handle http request to delete a record
+   * @param { { params: { id: string } } } req The express request object
+   * @param { object }                      res The express response object
+   * @emits event:delete
+   * @returns {Promise<Function>}
+   */
+  async deleteApplicants(req, res) {
+    try {
+      await req.body.forEach(async element => {
+        const doc = await this.repo.delete(element)
+        if (doc) {
+          this.listening && this.emit('delete', req, doc)
+        }
+      })
+      this.response.success(res, `${this.name}(s) deleted successfully!`)
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async fetchApplicantDetails(req, res) {
+    try {
+      const applicant = {}
+      const query = { applicant: req.params.id }
+      applicant.initialEnquiry = await this.initialEnquiryRepo.getOne(query)
+      if (applicant.initialEnquiry) {
+        applicant.previousSchools = await this.previousSchoolRepo.get(query)
+        applicant.studentBackground = await this.studentBackgroundRepo.getOne(query)
+        applicant.siblings = await this.siblingRepos.get(query)
+        applicant.healthAndMedical = await this.healthAndMedicalRepo.getOne(query)
+        applicant.guardianContactInformation = await this.guardianContactInformationRepo.getOne(
+          query
+        )
+        applicant.emergencyContact = await this.emergencyContactRepo.getOne(query)
+        this.response.successWithData(res, applicant)
+      } else {
+        this.response.successWithData(res, {}, 'No record found')
+      }
     } catch (error) {
       this.response.error(res, error.message || error)
     }
