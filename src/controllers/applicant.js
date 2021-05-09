@@ -249,6 +249,9 @@ module.exports.factory = class extends BaseController {
         const query = { applicant: applicant._id }
         applicant.initialEnquiry = await this.initialEnquiryRepo.getOne(query)
         if (req.body.export) {
+          if (!applicant.initialEnquiry) {
+            applicant.initialEnquiry = { studentInfo: {} }
+          }
           return {
             _id: applicant._id,
             code: applicant.code,
