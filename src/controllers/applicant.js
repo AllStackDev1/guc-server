@@ -121,6 +121,7 @@ module.exports.factory = class extends BaseController {
     this.resendCode = this.resendCode.bind(this)
     this.deleteApplicants = this.deleteApplicants.bind(this)
     this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
+    this.fetchAllApplicantDetails = this.fetchAllApplicantDetails.bind(this)
   }
 
   async auth(req, res) {
@@ -237,6 +238,42 @@ module.exports.factory = class extends BaseController {
       } else {
         this.response.successWithData(res, {}, 'No record found')
       }
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async fetchAllApplicantDetails(req, res) {
+    try {
+      const applicantsPromises = await req.body.applicants.map(async applicant => {
+        const query = { applicant: applicant._id }
+        applicant.initialEnquiry = await this.initialEnquiryRepo.getOne(query)
+        if (req.body.export) {
+          return {
+            _id: applicant._id,
+            code: applicant.code,
+            ...applicant.initialEnquiry.studentInfo
+          }
+        } else {
+          if (applicant.initialEnquiry) {
+            applicant.previousSchools = await this.previousSchoolRepo.get(query)
+            applicant.studentBackground = await this.studentBackgroundRepo.getOne(query)
+            applicant.siblings = await this.siblingRepos.get(query)
+            applicant.healthAndMedical = await this.healthAndMedicalRepo.getOne(query)
+            applicant.guardianContactInformation = await this.guardianContactInformationRepo.getOne(
+              query
+            )
+            applicant.emergencyContact = await this.emergencyContactRepo.getOne(query)
+            return applicant
+          } else {
+            return {}
+          }
+        }
+      })
+      // wait until all promises resolve
+      const applicants = await Promise.all(applicantsPromises)
+
+      this.response.successWithData(res, applicants)
     } catch (error) {
       this.response.error(res, error.message || error)
     }

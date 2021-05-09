@@ -106,6 +106,18 @@ module.exports.factory = (
       }
     },
     {
+      route: 'applicants-details',
+      methods: ['post'],
+      // guard: true,
+      middlewares: {
+        post: [
+          // hasAccess([ADMIN]),
+          ApplicantValidations.querySearch2,
+          ApplicantController.fetchAllApplicantDetails
+        ]
+      }
+    },
+    {
       route: 'applicants/bulk-delete',
       methods: ['post'],
       guard: true,
