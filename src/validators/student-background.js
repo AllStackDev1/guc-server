@@ -19,8 +19,8 @@ module.exports.factory = _celebrate => {
 
   const put = celebrate({
     body: Joi.object().keys({
-      applicant: Joi.string().required(),
-      specialNeeds: Joi.string().required(),
+      applicant: Joi.string(),
+      specialNeeds: Joi.string(),
       details: Joi.string()
     })
   })

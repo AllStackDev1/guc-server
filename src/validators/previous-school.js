@@ -11,8 +11,8 @@ module.exports.factory = _celebrate => {
 
   const post = celebrate({
     body: Joi.object().keys({
-      name: Joi.string().required(),
-      email: Joi.string().required(),
+      name: Joi.string(),
+      email: Joi.string(),
       address: Joi.string().required(),
       applicant: Joi.string().required(),
       dateOfArrival: Joi.string().required(),
@@ -22,12 +22,12 @@ module.exports.factory = _celebrate => {
 
   const put = celebrate({
     body: Joi.object().keys({
-      name: Joi.string().required(),
-      email: Joi.string().required(),
-      address: Joi.string().required(),
-      applicant: Joi.string().required(),
-      dateOfArrival: Joi.string().required(),
-      dateOfLeaving: Joi.string().required()
+      name: Joi.string(),
+      email: Joi.string(),
+      address: Joi.string(),
+      applicant: Joi.string(),
+      dateOfArrival: Joi.string(),
+      dateOfLeaving: Joi.string()
     })
   })
 

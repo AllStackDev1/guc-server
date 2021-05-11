@@ -20,10 +20,10 @@ module.exports.factory = _celebrate => {
 
   const put = celebrate({
     body: Joi.object().keys({
-      dob: Joi.string().required(),
-      name: Joi.string().required(),
-      gender: Joi.string().required(),
-      applicant: Joi.string().required()
+      dob: Joi.string(),
+      name: Joi.string(),
+      gender: Joi.string(),
+      applicant: Joi.string()
     })
   })
 

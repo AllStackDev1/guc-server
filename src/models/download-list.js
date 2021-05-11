@@ -30,7 +30,7 @@ module.exports.factory = (mongoose, uniqueValidator) => {
 
   schema.index({ applicant: 1 })
 
-  schema.plugin(uniqueValidator, { message: '{PATH} must be unique' })
+  schema.plugin(uniqueValidator, { message: '{PATH} already added' })
 
   return mongoose.model('DownloadList', schema)
 }

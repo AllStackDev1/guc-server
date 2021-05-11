@@ -28,18 +28,18 @@ module.exports.factory = _celebrate => {
 
   const put = celebrate({
     body: Joi.object().keys({
-      applicant: Joi.string().required(),
-      asthma: Joi.bool().required(),
-      allergies: Joi.bool().required(),
-      diabiates: Joi.bool().required(),
-      epilepsy: Joi.bool().required(),
+      applicant: Joi.string(),
+      asthma: Joi.bool(),
+      allergies: Joi.bool(),
+      diabiates: Joi.bool(),
+      epilepsy: Joi.bool(),
       immuneFile: Joi.string().allow(''),
-      requireMedicalPlan: Joi.string().required(),
-      takeRegularMedication: Joi.string().required(),
-      dietaryRestriction: Joi.string().required(),
-      physicalRestriction: Joi.string().required(),
-      otherMedicalIssues: Joi.string().required(),
-      isImmunised: Joi.string().required()
+      requireMedicalPlan: Joi.string(),
+      takeRegularMedication: Joi.string(),
+      dietaryRestriction: Joi.string(),
+      physicalRestriction: Joi.string(),
+      otherMedicalIssues: Joi.string(),
+      isImmunised: Joi.string()
     })
   })
 
