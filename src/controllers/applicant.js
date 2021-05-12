@@ -98,6 +98,23 @@ module.exports.factory = class extends BaseController {
       this.mailJet.applicationCodeEmail(payload)
     })
 
+    this.on('update', async (req, doc) => {
+      const { eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+      const payload = {
+        email: doc.email,
+        name: doc.firstName + ' ' + doc.lastName,
+        files: [doc.resultDoc],
+        data: {
+          images: eImgLoc,
+          firstName: doc.firstName,
+          year: new Date().getFullYear()
+        }
+      }
+      if (doc.stage === 14) {
+        this.mailJet.resultEmail(payload)
+      }
+    })
+
     this.on('delete', async (req, doc) => {
       try {
         const query = { applicant: doc._id }

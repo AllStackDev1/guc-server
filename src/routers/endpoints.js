@@ -112,10 +112,10 @@ module.exports.factory = (
     {
       route: 'applicants-details',
       methods: ['post'],
-      // guard: true,
+      guard: true,
       middlewares: {
         post: [
-          // hasAccess([ADMIN]),
+          hasAccess([ADMIN]),
           ApplicantValidations.querySearch2,
           ApplicantController.fetchAllApplicantDetails
         ]
@@ -499,7 +499,7 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         post: [hasAccess([ADMIN]), ScheduleTestValidations.post, ScheduleTestController.insert],
-        get: [hasAccess([ADMIN]), ScheduleTestController.fetch]
+        get: [hasAccess([APPLICANT, ADMIN]), ScheduleTestController.fetch]
       }
     },
     {

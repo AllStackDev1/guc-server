@@ -38,6 +38,17 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
         ]
       }
 
+      if (mail.files) {
+        message.Attachments = []
+        mail.files.forEach(file => {
+          message.Attachments.push({
+            ContentType: 'application/pdf',
+            Filename: 'result.pdf',
+            Base64Content: file.split('base64,')[1]
+          })
+        })
+      }
+
       if (mail.replyTo) {
         message.ReplyTo = {
           Email: mail.replyTo
@@ -86,5 +97,15 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
     }
   }
 
-  return { applicationCodeEmail, welcomeEmail, scheduleTest }
+  const resultEmail = async ({ data, ...rest }) => {
+    try {
+      const html = await readFile('email-templates/result-email.html')
+      const content = replaceDoubleBraces(html, data)
+      return await sendMail({ ...rest, subject: 'Test Result Out', content })
+    } catch (error) {
+      logger.getLogger().error(error)
+    }
+  }
+
+  return { applicationCodeEmail, welcomeEmail, scheduleTest, resultEmail }
 }

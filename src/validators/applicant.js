@@ -31,7 +31,9 @@ module.exports.factory = (_celebrate, helpers) => {
       lastName: Joi.string().regex(/^(?![\s.]+$)[a-zA-Z\s-_.]*$/),
       email: Joi.string().email({ minDomainSegments: 2 }),
       status: Joi.string().valid(PENDING, PAID),
-      stage: Joi.number().valid(5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12)
+      resultDoc: Joi.string(),
+      isAdmitted: Joi.bool(),
+      stage: Joi.number().valid(5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12, 13, 14, 15)
     })
   })
 
@@ -62,7 +64,7 @@ module.exports.factory = (_celebrate, helpers) => {
 
   const querySearch = celebrate({
     query: Joi.object().keys({
-      stage: Joi.number().valid(5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12)
+      stage: Joi.number().valid(5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12, 13, 14, 15)
     })
   })
 

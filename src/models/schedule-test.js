@@ -28,9 +28,6 @@ module.exports.factory = (mongoose, uniqueValidator) => {
         type: Date,
         required: true
       },
-      resultDoc: {
-        type: String
-      },
       status: {
         type: String,
         default: 'Scheduled',

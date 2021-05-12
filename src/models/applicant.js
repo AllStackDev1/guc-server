@@ -50,12 +50,19 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
       stage: {
         type: Number,
         default: 5,
-        enum: [5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12]
+        enum: [5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12, 13, 14, 15]
       },
       status: {
         type: String,
         default: PENDING,
         enum: [PENDING, PAID]
+      },
+      resultDoc: {
+        type: String
+      },
+      isAdmitted: {
+        type: Boolean,
+        default: false
       },
       avatar: String
     },
@@ -102,6 +109,8 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
       'firstName',
       'lastName',
       'phoneNumber',
+      'resultDoc',
+      'isAdmitted',
       'createdAt',
       'status',
       'stage',

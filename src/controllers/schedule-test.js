@@ -45,7 +45,7 @@ module.exports.factory = class extends BaseController {
 
     this.on('insert', async (req, docs) => {
       await docs.forEach(async doc => {
-        const applicant = await applicantRepo.getOne({ code: doc.code })
+        const applicant = await this.applicantRepo.getOne({ code: doc.code })
         const { eImgLoc } = this.getEnvs(process.env.NODE_ENV)
         const payload = {
           email: applicant.email,
@@ -59,6 +59,8 @@ module.exports.factory = class extends BaseController {
             year: new Date().getFullYear()
           }
         }
+        applicant.stage = 13
+        await applicant.save()
         this.mailJet.scheduleTest(payload)
       })
     })
