@@ -38,6 +38,14 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
 
   const dateTime = new Date().toISOString().slice(-24).replace(/\D/g, '').slice(0, 14)
 
+  const getformattedDate = date => {
+    return new Date(date).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    })
+  }
+
   return {
     ajax,
     Status,
@@ -46,6 +54,7 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
     dateTime,
     isNotEmpty,
     AccessType,
+    getformattedDate,
     replaceDoubleBraces
   }
 }

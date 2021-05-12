@@ -4,13 +4,15 @@ const BaseController = require('./base')
 
 /**
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
- * @summary Controller to handle http request for DownloadList model related functions
- * @name DownloadListController
+ * @summary Controller to handle http request for ScheduleTest model related functions
+ * @name ScheduleTestController
  * @extends BaseController
  */
-module.exports.name = 'DownloadListController'
+module.exports.name = 'ScheduleTestController'
 module.exports.dependencies = [
-  'DownloadListRepository',
+  'ScheduleTestRepository',
+  'ApplicantRepository',
+  'MailJet',
   'envs',
   'miscHelpers',
   'logger',
@@ -21,19 +23,45 @@ module.exports.factory = class extends BaseController {
   /**
    * @param {object} repo The repository which will handle the operations to be
    * performed in this controller
+   * @param {object} applicantRepo - applicant repository
+   * @param {object} mailJet - mailing function object
    * @param {object} getEnvs - env object
    * @param {object} helper - helper functions object
    * @param {object} logger - logger functions
    * @param {object} response - response handler function object
    * @param {object} mongoose mongodb middleware
    */
-  constructor(repo, getEnvs, helper, logger, response, mongoose) {
+  constructor(repo, applicantRepo, mailJet, getEnvs, helper, logger, response, mongoose) {
     super(repo, mongoose, helper, logger, response)
-    this.name = 'Download list'
+    this.name = 'Schedule Test'
+    this.listening = true
+    this.mailJet = mailJet
+    this.getEnvs = getEnvs
+    this.applicantRepo = applicantRepo
 
     this.fetch = this.fetch.bind(this)
     this.drop = this.drop.bind(this)
-    this.deleteDownloadLists = this.deleteDownloadLists.bind(this)
+    this.deleteScheduleTests = this.deleteScheduleTests.bind(this)
+
+    this.on('insert', async (req, docs) => {
+      await docs.forEach(async doc => {
+        const applicant = await applicantRepo.getOne({ code: doc.code })
+        const { eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+        const payload = {
+          email: applicant.email,
+          name: applicant.firstName + ' ' + applicant.lastName,
+          data: {
+            images: eImgLoc,
+            accessCode: doc.accessCode,
+            examDate: this.helper.getformattedDate(doc.examDate),
+            examTime: new Date(doc.examDate).toLocaleTimeString('en-US'),
+            firstName: applicant.firstName,
+            year: new Date().getFullYear()
+          }
+        }
+        this.mailJet.scheduleTest(payload)
+      })
+    })
   }
 
   /**
@@ -43,13 +71,13 @@ module.exports.factory = class extends BaseController {
    */
   async fetch(req, res) {
     try {
-      const downloadList = await this.repo.aggregate([
+      const ScheduleTests = await this.repo.aggregate([
         { $match: req.query },
         {
           $lookup: {
             from: 'applicants',
-            let: { applicant: '$applicant' },
-            pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$applicant'] } } }],
+            let: { code: '$code' },
+            pipeline: [{ $match: { $expr: { $eq: ['$code', '$$code'] } } }],
             as: 'applicant'
           }
         },
@@ -57,19 +85,19 @@ module.exports.factory = class extends BaseController {
         {
           $project: {
             _id: '$_id',
-            applicant: '$applicant._id',
-            code: '$applicant.code',
+            code: '$code',
+            status: '$status',
+            examDate: '$examDate',
+            createdAt: '$createdAt',
+            accessCode: '$accessCode',
             email: '$applicant.email',
-            firstName: '$applicant.firstName',
-            lastName: '$applicant.lastName',
+            applicant: '$applicant._id',
             phoneNumber: '$applicant.phoneNumber',
-            status: '$applicant.status',
-            stage: '$applicant.stage',
-            createdAt: '$applicant.createdAt'
+            fullName: { $concat: ['$applicant.firstName', ' ', '$applicant.lastName'] }
           }
         }
       ])
-      this.response.successWithData(res, downloadList)
+      this.response.successWithData(res, ScheduleTests)
     } catch (error) {
       this.response.error(res, error.message || error)
     }
@@ -82,7 +110,7 @@ module.exports.factory = class extends BaseController {
    * @emits event:delete
    * @returns {Promise<Function>}
    */
-  async deleteDownloadLists(req, res) {
+  async deleteScheduleTests(req, res) {
     try {
       await req.body.forEach(async element => {
         await this.repo.delete(element)

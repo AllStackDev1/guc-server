@@ -25,8 +25,10 @@ module.exports.dependencies = [
   'GuardianContactInformationValidations',
   'EmergencyContactController',
   'EmergencyContactValidations',
-  'DownloadListValidations',
   'DownloadListController',
+  'DownloadListValidations',
+  'ScheduleTestController',
+  'ScheduleTestValidations',
   'MiscValidations',
   'hasAccess',
   'miscHelpers'
@@ -50,8 +52,10 @@ module.exports.factory = (
   GuardianContactInformationValidations,
   EmergencyContactController,
   EmergencyContactValidations,
-  DownloadListValidations,
   DownloadListController,
+  DownloadListValidations,
+  ScheduleTestController,
+  ScheduleTestValidations,
   MiscValidations,
   hasAccess,
   Helpers
@@ -483,7 +487,53 @@ module.exports.factory = (
           DownloadListValidations.put,
           DownloadListController.update
         ],
-        delete: [hasAccess([APPLICANT, ADMIN]), MiscValidations.id, DownloadListController.delete]
+        delete: [hasAccess([ADMIN]), MiscValidations.id, DownloadListController.delete]
+      }
+    },
+    // #endregion
+
+    // #region SCHEDULE TEST ENDPOINTS
+    {
+      route: 'schedule-tests',
+      methods: ['post', 'get'],
+      guard: true,
+      middlewares: {
+        post: [hasAccess([ADMIN]), ScheduleTestValidations.post, ScheduleTestController.insert],
+        get: [hasAccess([ADMIN]), ScheduleTestController.fetch]
+      }
+    },
+    {
+      route: 'schedule-tests/bulk-delete',
+      methods: ['post'],
+      guard: true,
+      middlewares: {
+        post: [
+          hasAccess([ADMIN]),
+          ScheduleTestValidations.deleteScheduleTests,
+          ScheduleTestController.deleteScheduleTests
+        ]
+      }
+    },
+    {
+      route: 'schedule-tests/drop',
+      methods: ['delete'],
+      guard: true,
+      middlewares: {
+        delete: [hasAccess([ADMIN]), ScheduleTestController.drop]
+      }
+    },
+    {
+      route: 'schedule-tests/:id',
+      methods: ['put', 'delete'],
+      guard: true,
+      middlewares: {
+        put: [
+          hasAccess([ADMIN]),
+          MiscValidations.id,
+          ScheduleTestValidations.put,
+          ScheduleTestController.update
+        ],
+        delete: [hasAccess([ADMIN]), MiscValidations.id, ScheduleTestController.delete]
       }
     }
     // #endregion

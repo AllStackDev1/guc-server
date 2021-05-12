@@ -76,5 +76,15 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
     }
   }
 
-  return { applicationCodeEmail, welcomeEmail }
+  const scheduleTest = async ({ data, ...rest }) => {
+    try {
+      const html = await readFile('email-templates/schedule-test.html')
+      const content = replaceDoubleBraces(html, data)
+      return await sendMail({ ...rest, subject: 'Test Scheduled', content })
+    } catch (error) {
+      logger.getLogger().error(error)
+    }
+  }
+
+  return { applicationCodeEmail, welcomeEmail, scheduleTest }
 }

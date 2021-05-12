@@ -12,5 +12,6 @@ module.exports = [
   require('./health-and-medical'),
   require('./guardian-contact-information'),
   require('./emergency-contact'),
-  require('./download-list')
+  require('./download-list'),
+  require('./schedule-test')
 ]
