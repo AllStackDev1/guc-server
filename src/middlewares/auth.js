@@ -5,7 +5,7 @@
 module.exports.name = 'auth'
 module.exports.dependencies = ['jsonwebtoken', 'envs', 'response']
 module.exports.factory = (jwt, getEnvs, response) => {
-  const { secret } = getEnvs(process.env.NODE_ENV)
+  const { secret } = getEnvs
 
   return function (passport, type) {
     return async function (req, res, next) {

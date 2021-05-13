@@ -9,7 +9,7 @@ module.exports.factory = (passport, passportLocal, passportJWT, AdminModel, envs
   const JWTStrategy = passportJWT.Strategy
   const ExtractJWT = passportJWT.ExtractJwt
 
-  const { secret } = envs(process.env.NODE_ENV)
+  const { secret } = envs
 
   passport.serializeUser((admin, done) => {
     done(null, admin.email)

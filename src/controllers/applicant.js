@@ -20,6 +20,7 @@ module.exports.dependencies = [
   'EmergencyContactRepository',
   'DownloadListRepository',
   'MailJet',
+  'Twilio',
   'Termii',
   'envs',
   'miscHelpers',
@@ -58,6 +59,7 @@ module.exports.factory = class extends BaseController {
     emergencyContactRepo,
     downloadListRepo,
     mailJet,
+    twilio,
     termii,
     getEnvs,
     helper,
@@ -69,6 +71,7 @@ module.exports.factory = class extends BaseController {
     this.name = 'Applicant'
     this.listening = true
     this.mailJet = mailJet
+    this.twilio = twilio
     this.termii = termii
     this.getEnvs = getEnvs
 
@@ -83,7 +86,7 @@ module.exports.factory = class extends BaseController {
 
     // events
     this.on('insert', (req, doc) => {
-      const { clientUrl, eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+      const { clientUrl, eImgLoc } = this.getEnvs
       const payload = {
         email: doc.email,
         name: doc.firstName + ' ' + doc.lastName,
@@ -99,7 +102,7 @@ module.exports.factory = class extends BaseController {
     })
 
     this.on('update', async (req, doc) => {
-      const { eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+      const { eImgLoc } = this.getEnvs
       const payload = {
         email: doc.email,
         name: doc.firstName + ' ' + doc.lastName,
@@ -149,9 +152,9 @@ module.exports.factory = class extends BaseController {
           `No ${this.name.toLowerCase()} with application code: ${req.body.code} found.`
         )
       }
-      const response = await this.termii.sendOtp(applicant.phoneNumber)
-      if (response.message) {
-        this.log(response.message)
+      const response = await this.twilio.sendOtp(applicant.phoneNumber)
+      if (!response.sid) {
+        this.log(response)
         throw new Error('Unexpected error, please try again or contact support.')
       }
 
@@ -167,9 +170,9 @@ module.exports.factory = class extends BaseController {
 
   async verifyOTP(req, res) {
     try {
-      const response = await this.termii.verifyOtp(req.body)
-      if (response.verified !== 'true' && !response.msisdn) throw new Error('OTP expired!')
-      const applicant = await this.repo.getOne({ phoneNumber: response.msisdn })
+      const response = await this.twilio.verifyOtp(req.body)
+      if (response.status !== 'approved' || !response.to) throw new Error('OTP expired!')
+      const applicant = await this.repo.getOne({ phoneNumber: response.to })
       const token = await applicant.generateAuthToken()
       this.response.successWithData(res, token)
     } catch (error) {
@@ -197,7 +200,7 @@ module.exports.factory = class extends BaseController {
           `No ${this.name.toLowerCase()} found with this phone number: ${req.body.phoneNumber}`
         )
       }
-      const { clientUrl, eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+      const { clientUrl, eImgLoc } = this.getEnvs
       const payload = {
         email: applicant.email,
         name: applicant.firstName + ' ' + applicant.lastName,

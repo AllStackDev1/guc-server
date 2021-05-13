@@ -11,7 +11,7 @@ module.exports.factory = (mongoose, bcrypt, jwt, lodash, getEnvs) => {
 
   const Schema = mongoose.Schema
   const { pick, upperFirst } = lodash
-  const { secret, expiresIn } = getEnvs(process.env.NODE_ENV)
+  const { secret, expiresIn } = getEnvs
 
   // Define schema for Admin Model
   const schema = new Schema(

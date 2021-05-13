@@ -45,8 +45,8 @@ module.exports.factory = (_celebrate, helpers) => {
 
   const verifyOTP = celebrate({
     body: Joi.object().keys({
-      pin_id: Joi.string().required(),
-      pin: Joi.string().required()
+      to: Joi.string().required(),
+      code: Joi.string().required()
     })
   })
 

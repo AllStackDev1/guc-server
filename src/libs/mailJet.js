@@ -14,7 +14,7 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
   const { readFile, replaceDoubleBraces } = helpers
 
   // Get application configuration based on environment
-  const { mailJetPublic, mailJetPrivate, mailerName, mailerEmail } = getEnvs(process.env.NODE_ENV)
+  const { mailJetPublic, mailJetPrivate, mailerName, mailerEmail } = getEnvs
 
   const mailJet = connect(mailJetPublic, mailJetPrivate)
 

@@ -47,7 +47,7 @@ module.exports.factory = class extends BaseController {
     this.on('insert', async (req, doc) => {
       try {
         const applicant = await this.applicantRepo.update(doc.applicant, { stage: 12 })
-        const { eImgLoc } = this.getEnvs(process.env.NODE_ENV)
+        const { eImgLoc } = this.getEnvs
         const payload = {
           email: applicant.email,
           name: applicant.firstName + ' ' + applicant.lastName,

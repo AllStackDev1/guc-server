@@ -12,12 +12,11 @@ module.exports.factory = getEnvs => {
   /**
    * Determines the configuration settings to use based
    * on the database environment
-   * @param {String} environment, the environment app is running on
    */
-  const configureDB = environment => {
+  const configureDB = () => {
     // configuration object
 
-    const { dbUrl, dbName } = getEnvs(environment)
+    const { dbUrl, dbName } = getEnvs
 
     return dbUrl + '/' + dbName + '?retryWrites=true&w=majority'
   }

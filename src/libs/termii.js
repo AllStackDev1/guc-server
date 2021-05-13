@@ -11,7 +11,7 @@ module.exports.factory = (getEnvs, helpers) => {
   'use strict'
 
   // Get application configuration based on environment
-  const { termiiId, termiiKey } = getEnvs(process.env.NODE_ENV)
+  const { termiiId, termiiKey } = getEnvs
   const { ajax } = helpers
 
   const TERMII_URL = 'https://termii.com/api/sms/otp'

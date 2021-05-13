@@ -18,7 +18,7 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
 
   const Schema = mongoose.Schema
   const { pick, upperFirst } = lodash
-  const { secret, expiresIn } = getEnvs(process.env.NODE_ENV)
+  const { secret, expiresIn } = getEnvs
   const { PENDING, PAID } = helpers.Status
 
   // Define schema for Applicant Model
