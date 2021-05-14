@@ -9,8 +9,6 @@ module.exports.factory = (passport, passportLocal, passportJWT, AdminModel, envs
   const JWTStrategy = passportJWT.Strategy
   const ExtractJWT = passportJWT.ExtractJwt
 
-  const { secret } = envs
-
   passport.serializeUser((admin, done) => {
     done(null, admin.email)
   })
@@ -54,12 +52,11 @@ module.exports.factory = (passport, passportLocal, passportJWT, AdminModel, envs
 
   passport.use(
     new JWTStrategy(
-      { jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), secretOrKey: secret },
+      { jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), secretOrKey: envs.secret },
       async (jwtPayload, done) => {
         try {
           return done(null, jwtPayload)
         } catch (error) {
-          console.log(error)
           done({ message: error })
         }
       }

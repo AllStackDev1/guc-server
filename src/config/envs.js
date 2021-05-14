@@ -13,7 +13,7 @@ module.exports.factory = () => {
    * @returns an object having configuration settings for the application
    */
   return {
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || 'GCUSc4001',
     expiresIn: process.env.EXPIRES_IN,
     eImgLoc: process.env.EIMG_LOC,
     dbUrl: process.env.DATABASE_URL,
