@@ -171,7 +171,7 @@ module.exports.factory = class extends BaseController {
   async verifyOTP(req, res) {
     try {
       const response = await this.twilio.verifyOtp(req.body)
-      if (response.status !== 'approved' || !response.to) throw new Error('OTP expired!')
+      if (!response.to) throw new Error('OTP expired!')
       const applicant = await this.repo.getOne({ phoneNumber: response.to })
       const token = await applicant.generateAuthToken()
       this.response.successWithData(res, token)
