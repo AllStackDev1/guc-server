@@ -122,6 +122,14 @@ module.exports.factory = (
       }
     },
     {
+      route: 'applicants/result',
+      methods: ['get'],
+      guard: true,
+      middlewares: {
+        get: [hasAccess([APPLICANT]), ApplicantController.getResultFile]
+      }
+    },
+    {
       route: 'applicants/bulk-delete',
       methods: ['post'],
       guard: true,

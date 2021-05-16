@@ -109,7 +109,7 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
       'firstName',
       'lastName',
       'phoneNumber',
-      'resultDoc',
+      // 'resultDoc',
       'isAdmitted',
       'createdAt',
       'status',
