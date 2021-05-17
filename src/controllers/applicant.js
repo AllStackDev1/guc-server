@@ -153,12 +153,11 @@ module.exports.factory = class extends BaseController {
           `No ${this.name.toLowerCase()} with application code: ${req.body.code} found.`
         )
       }
-      const response = await this.twilio.sendOtp(applicant.phoneNumber)
-      if (!response.sid) {
-        this.log(response)
+      const response = await this.termii.sendOtp(applicant.phoneNumber)
+      if (response.message) {
+        this.log(response.message)
         throw new Error('Unexpected error, please try again or contact support.')
       }
-
       this.response.successWithData(
         res,
         response,
@@ -171,9 +170,9 @@ module.exports.factory = class extends BaseController {
 
   async verifyOTP(req, res) {
     try {
-      const response = await this.twilio.verifyOtp(req.body)
-      if (!response.to) throw new Error('OTP expired!')
-      const applicant = await this.repo.getOne({ phoneNumber: response.to })
+      const response = await this.termii.verifyOtp(req.body)
+      if (response.verified !== 'true' && !response.msisdn) throw new Error('OTP expired!')
+      const applicant = await this.repo.getOne({ phoneNumber: response.msisdn })
       const token = await applicant.generateAuthToken()
       this.response.successWithData(res, token)
     } catch (error) {
