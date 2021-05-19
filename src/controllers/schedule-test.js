@@ -95,7 +95,9 @@ module.exports.factory = class extends BaseController {
             email: '$applicant.email',
             applicant: '$applicant._id',
             phoneNumber: '$applicant.phoneNumber',
-            fullName: { $concat: ['$applicant.firstName', ' ', '$applicant.lastName'] }
+            firstName: '$applicant.firstName',
+            lastName: '$applicant.lastName',
+            resultDoc: '$applicant.resultDoc'
           }
         }
       ])
