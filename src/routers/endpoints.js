@@ -130,6 +130,14 @@ module.exports.factory = (
       }
     },
     {
+      route: 'applicants/with/result',
+      methods: ['get'],
+      guard: true,
+      middlewares: {
+        get: [hasAccess([ADMIN]), ApplicantController.getApplicantWithResult]
+      }
+    },
+    {
       route: 'applicants/bulk-delete',
       methods: ['post'],
       guard: true,

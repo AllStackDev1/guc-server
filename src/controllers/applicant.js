@@ -142,6 +142,7 @@ module.exports.factory = class extends BaseController {
     this.getResultFile = this.getResultFile.bind(this)
     this.deleteApplicants = this.deleteApplicants.bind(this)
     this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
+    this.getApplicantWithResult = this.getApplicantWithResult.bind(this)
     this.fetchAllApplicantDetails = this.fetchAllApplicantDetails.bind(this)
   }
 
@@ -224,6 +225,15 @@ module.exports.factory = class extends BaseController {
       const applicant = await this.repo.getById(req.user._id)
       if (!applicant) throw new Error(`No ${this.name.toLowerCase()} found with this id`)
       this.response.successWithData(res, applicant.resultDoc)
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async getApplicantWithResult(req, res, next) {
+    try {
+      const applicants = await this.repo.get({ resultDoc: { $ne: null } })
+      this.response.successWithData(res, applicants)
     } catch (error) {
       this.response.error(res, error.message || error)
     }
