@@ -15,7 +15,7 @@ module.exports.factory = () => {
   return {
     secret: process.env.SECRET || 'GCUSc4001',
     expiresIn: process.env.EXPIRES_IN,
-    eImgLoc: process.env.EIMG_LOC,
+    eImgLoc: 'https://thegcu.com/images/email' || process.env.EIMG_LOC,
     dbUrl: process.env.DATABASE_URL,
     dbName: process.env.DATABASE_NAME,
     clientUrl: process.env.CLIENT_URL,
