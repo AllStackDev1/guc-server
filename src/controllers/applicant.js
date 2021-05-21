@@ -172,7 +172,10 @@ module.exports.factory = class extends BaseController {
   async verifyOTP(req, res) {
     try {
       const response = await this.termii.verifyOtp(req.body)
-      if (response.verified !== 'true' && !response.msisdn) throw new Error('OTP expired!')
+      console.log(response)
+      if (response.verified !== 'true' || !response.msisdn) {
+        throw new Error('OTP invalid or expired!')
+      }
       const applicant = await this.repo.getOne({ phoneNumber: response.msisdn })
       const token = await applicant.generateAuthToken()
       this.response.successWithData(res, token)
