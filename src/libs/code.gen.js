@@ -4,8 +4,8 @@
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
  */
 module.exports.name = 'GenerateCode'
-module.exports.dependencies = ['async', 'CounterModel', 'logger']
-module.exports.factory = (async, counter, logger) => {
+module.exports.dependencies = ['async', 'randomatic', 'CounterModel', 'logger']
+module.exports.factory = (async, randomatic, counter, logger) => {
   'use strict'
 
   const { waterfall } = async
@@ -17,6 +17,7 @@ module.exports.factory = (async, counter, logger) => {
    * @param {Function} next
    */
   return (sequenceName, next) => {
+    const num = randomatic('000')
     waterfall(
       [
         function findDoc(next) {
@@ -62,14 +63,7 @@ module.exports.factory = (async, counter, logger) => {
           logger.getLogger().error(err)
           return
         }
-        if (('' + result).length < 6) {
-          const len = 6 - ('' + result).length
-          '0'.repeat(len)
-          return next('0'.repeat(len) + result)
-        } else {
-          // TODO: send email
-        }
-        return next('' + result)
+        return next(result + num)
       }
     )
   }

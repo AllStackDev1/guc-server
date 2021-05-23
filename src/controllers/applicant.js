@@ -154,16 +154,18 @@ module.exports.factory = class extends BaseController {
           `No ${this.name.toLowerCase()} with application code: ${req.body.code} found.`
         )
       }
-      const response = await this.termii.sendOtp(applicant.phoneNumber)
-      if (response.message) {
-        this.log(response.message)
-        throw new Error('Unexpected error, please try again or contact support.')
-      }
-      this.response.successWithData(
-        res,
-        response,
-        'OTP Code has been sent to your registered phone number'
-      )
+      // const response = await this.termii.sendOtp(applicant.phoneNumber)
+      // if (response.message) {
+      //   this.log(response.message)
+      //   throw new Error('Unexpected error, please try again or contact support.')
+      // }
+      // this.response.successWithData(
+      //   res,
+      //   response,
+      //   'OTP Code has been sent to your registered phone number'
+      // )
+      const token = await applicant.generateAuthToken()
+      this.response.successWithData(res, token)
     } catch (error) {
       this.response.error(res, error.message || error)
     }
