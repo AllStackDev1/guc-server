@@ -106,7 +106,12 @@ module.exports.factory = (
       methods: ['get'],
       guard: true,
       middlewares: {
-        get: [hasAccess([ADMIN]), ApplicantValidations.querySearch, ApplicantController.get]
+        get: [
+          hasAccess([ADMIN]),
+          ApplicantValidations.querySearch,
+          ApplicantController.preGet,
+          ApplicantController.get
+        ]
       }
     },
     {

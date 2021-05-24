@@ -136,6 +136,7 @@ module.exports.factory = class extends BaseController {
 
     // method binding
     this.auth = this.auth.bind(this)
+    this.preGet = this.preGet.bind(this)
     this.verifyOTP = this.verifyOTP.bind(this)
     this.preInsert = this.preInsert.bind(this)
     this.resendCode = this.resendCode.bind(this)
@@ -144,6 +145,17 @@ module.exports.factory = class extends BaseController {
     this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
     this.getApplicantWithResult = this.getApplicantWithResult.bind(this)
     this.fetchAllApplicantDetails = this.fetchAllApplicantDetails.bind(this)
+  }
+
+  async preGet(req, res, next) {
+    try {
+      if (req.query.stage) {
+        req.query.stage = { $gte: req.query.stage }
+      }
+      next()
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
   }
 
   async auth(req, res) {
