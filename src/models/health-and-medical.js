@@ -23,19 +23,27 @@ module.exports.factory = mongoose => {
       },
       asthma: {
         type: Boolean,
-        required: true
+        default: false
       },
       allergies: {
         type: Boolean,
-        required: true
+        default: false
       },
       diabetes: {
         type: Boolean,
-        required: true
+        default: false
       },
       epilepsy: {
         type: Boolean,
-        required: true
+        default: false
+      },
+      others: {
+        type: Boolean,
+        default: false
+      },
+      notApplicable: {
+        type: Boolean,
+        default: false
       },
       immuneFile: {
         type: String
