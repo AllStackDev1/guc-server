@@ -29,7 +29,7 @@ module.exports.factory = mongoose => {
         type: Boolean,
         required: true
       },
-      diabiates: {
+      diabetes: {
         type: Boolean,
         required: true
       },

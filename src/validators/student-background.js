@@ -14,6 +14,11 @@ module.exports.factory = _celebrate => {
       applicant: Joi.string().required(),
       specialNeeds: Joi.string().required(),
       details: Joi.string()
+        .when('specialNeeds', {
+          is: 'yes',
+          then: Joi.string().required()
+        })
+        .allow('')
     })
   })
 
@@ -21,7 +26,7 @@ module.exports.factory = _celebrate => {
     body: Joi.object().keys({
       applicant: Joi.string(),
       specialNeeds: Joi.string(),
-      details: Joi.string()
+      details: Joi.string().allow('')
     })
   })
 

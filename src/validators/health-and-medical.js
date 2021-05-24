@@ -14,14 +14,15 @@ module.exports.factory = _celebrate => {
       applicant: Joi.string().required(),
       asthma: Joi.bool().required(),
       allergies: Joi.bool().required(),
-      diabiates: Joi.bool().required(),
+      diabetes: Joi.bool().required(),
       epilepsy: Joi.bool().required(),
+      others: Joi.bool().required(),
       immuneFile: Joi.string().allow(''),
-      requireMedicalPlan: Joi.string().required(),
-      takeRegularMedication: Joi.string().required(),
-      dietaryRestriction: Joi.string().required(),
-      physicalRestriction: Joi.string().required(),
-      otherMedicalIssues: Joi.string().required(),
+      requireMedicalPlan: Joi.string().allow(''),
+      takeRegularMedication: Joi.string().allow(''),
+      dietaryRestriction: Joi.string().allow(''),
+      physicalRestriction: Joi.string().allow(''),
+      otherMedicalIssues: Joi.string().allow(''),
       isImmunised: Joi.string().required()
     })
   })
@@ -31,14 +32,15 @@ module.exports.factory = _celebrate => {
       applicant: Joi.string(),
       asthma: Joi.bool(),
       allergies: Joi.bool(),
-      diabiates: Joi.bool(),
+      diabetes: Joi.bool(),
       epilepsy: Joi.bool(),
+      others: Joi.bool(),
       immuneFile: Joi.string().allow(''),
-      requireMedicalPlan: Joi.string(),
-      takeRegularMedication: Joi.string(),
-      dietaryRestriction: Joi.string(),
-      physicalRestriction: Joi.string(),
-      otherMedicalIssues: Joi.string(),
+      requireMedicalPlan: Joi.string().allow(''),
+      takeRegularMedication: Joi.string().allow(''),
+      dietaryRestriction: Joi.string().allow(''),
+      physicalRestriction: Joi.string().allow(''),
+      otherMedicalIssues: Joi.string().allow(''),
       isImmunised: Joi.string()
     })
   })
