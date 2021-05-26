@@ -62,6 +62,7 @@ module.exports.factory = (_celebrate, helpers) => {
 
   const querySearch = celebrate({
     query: Joi.object().keys({
+      completed: Joi.bool().valid(true, false),
       stage: Joi.number().valid(5, 6, 6.1, 6.2, 7, 8.1, 8.2, 9, 10, 11, 12, 13, 14, 15)
     })
   })

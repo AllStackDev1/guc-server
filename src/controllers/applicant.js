@@ -149,9 +149,12 @@ module.exports.factory = class extends BaseController {
 
   async preGet(req, res, next) {
     try {
-      if (req.query.stage) {
-        req.query.stage = { $gte: req.query.stage }
+      if (req.query.completed) {
+        req.query.stage = { $gte: 12 }
+      } else {
+        req.query.stage = { $lte: 11 }
       }
+      delete req.query.completed
       next()
     } catch (error) {
       this.response.error(res, error.message || error)
