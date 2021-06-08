@@ -137,10 +137,12 @@ module.exports.factory = class extends BaseController {
     // method binding
     this.auth = this.auth.bind(this)
     this.preGet = this.preGet.bind(this)
+    this.contactUs = this.contactUs.bind(this)
     this.verifyOTP = this.verifyOTP.bind(this)
     this.preInsert = this.preInsert.bind(this)
     this.resendCode = this.resendCode.bind(this)
     this.getResultFile = this.getResultFile.bind(this)
+    this.jobApplication = this.jobApplication.bind(this)
     this.deleteApplicants = this.deleteApplicants.bind(this)
     this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
     this.getApplicantWithResult = this.getApplicantWithResult.bind(this)
@@ -336,6 +338,38 @@ module.exports.factory = class extends BaseController {
       const applicants = await Promise.all(applicantsPromises)
 
       this.response.successWithData(res, applicants)
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async jobApplication(req, res) {
+    try {
+      const payload = {
+        email: 'principal@gcu.sch.ng',
+        name: req.body.fullname,
+        files: req.body.files,
+        subject: `Application for this role: ${req.body.jobTitle}`,
+        content: `<p>${req.body.message}</p> <br/> <b>Please find attacted applicant resume and cover letter.</b>`
+      }
+      await this.mailJet.sendMail(payload)
+      this.response.success(res, 'Message sent successfully')
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async contactUs(req, res) {
+    try {
+      const payload = {
+        email: 'principal@gcu.sch.ng',
+        name: req.body.fullName,
+        files: req.body.files,
+        subject: `Application for this role: ${req.body.jobTitle}`,
+        content: `<p>${req.body.message}</p> <br/> <b>Please find attacted applicant resume and cover letter.</b>`
+      }
+      await this.mailJet.sendMail(payload)
+      this.response.success(res, 'Message sent successfully')
     } catch (error) {
       this.response.error(res, error.message || error)
     }

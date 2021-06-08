@@ -172,6 +172,20 @@ module.exports.factory = (
         delete: [hasAccess([ADMIN]), MiscValidations.id, ApplicantController.delete]
       }
     },
+    {
+      route: 'contact-us',
+      methods: ['post'],
+      middlewares: {
+        post: [ApplicantValidations.contactUs, ApplicantController.contactUs]
+      }
+    },
+    {
+      route: 'job-application',
+      methods: ['post'],
+      middlewares: {
+        post: [ApplicantValidations.jobApplication, ApplicantController.jobApplication]
+      }
+    },
     // #endregion
 
     // #region ADMIN AUTH ENDPOINTS

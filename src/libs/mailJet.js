@@ -107,5 +107,5 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
     }
   }
 
-  return { applicationCodeEmail, welcomeEmail, scheduleTest, resultEmail }
+  return { applicationCodeEmail, welcomeEmail, scheduleTest, resultEmail, sendMail }
 }

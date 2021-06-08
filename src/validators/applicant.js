@@ -87,15 +87,35 @@ module.exports.factory = (_celebrate, helpers) => {
     })
   })
 
+  const jobApplication = celebrate({
+    body: Joi.object().keys({
+      fullname: Joi.string().required(),
+      files: Joi.array().items(Joi.string().required()).required(),
+      message: Joi.string().required(),
+      jobTitle: Joi.string().required()
+    })
+  })
+
+  const contactUs = celebrate({
+    body: Joi.array().items({
+      fullname: Joi.string().required(),
+      files: Joi.array().required(),
+      message: Joi.string().required(),
+      jobTitle: Joi.string().required()
+    })
+  })
+
   return {
     auth,
     patch,
     enroll,
+    contactUs,
     verifyOTP,
     resendOTP,
     resendCode,
     querySearch,
     querySearch2,
+    jobApplication,
     deleteApplicants
   }
 }
