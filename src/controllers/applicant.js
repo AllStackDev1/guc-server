@@ -151,9 +151,7 @@ module.exports.factory = class extends BaseController {
 
   async preGet(req, res, next) {
     try {
-      if (req.query.completed) {
-        req.query.stage = { $gte: 12 }
-      } else {
+      if (!req.query.completed) {
         req.query.stage = { $lte: 11 }
       }
       delete req.query.completed
@@ -253,7 +251,7 @@ module.exports.factory = class extends BaseController {
 
   async getApplicantWithResult(req, res, next) {
     try {
-      const applicants = await this.repo.get({ resultDoc: { $ne: null } })
+      const applicants = await this.repo.get({ stage: 14, resultDoc: { $ne: null } })
       this.response.successWithData(res, applicants)
     } catch (error) {
       this.response.error(res, error.message || error)

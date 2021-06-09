@@ -79,7 +79,7 @@ module.exports.factory = class extends BaseController {
           $lookup: {
             from: 'applicants',
             let: { code: '$code' },
-            pipeline: [{ $match: { $expr: { $eq: ['$code', '$$code'] } } }],
+            pipeline: [{ $match: { stage: 13, $expr: { $eq: ['$code', '$$code'] } } }],
             as: 'applicant'
           }
         },
@@ -93,6 +93,7 @@ module.exports.factory = class extends BaseController {
             createdAt: '$createdAt',
             accessCode: '$accessCode',
             email: '$applicant.email',
+            stage: '$applicant.stage',
             applicant: '$applicant._id',
             phoneNumber: '$applicant.phoneNumber',
             firstName: '$applicant.firstName',
