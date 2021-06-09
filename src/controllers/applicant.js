@@ -344,7 +344,7 @@ module.exports.factory = class extends BaseController {
   async jobApplication(req, res) {
     try {
       const payload = {
-        email: 'nedu63ima@gmail.com',
+        email: 'principal@gcu.sch.ng',
         files: req.body.files,
         subject: `Application for this role: ${req.body.jobTitle}`,
         content: `<p><b>Name:</b> ${req.body.fullname}</p> ${
