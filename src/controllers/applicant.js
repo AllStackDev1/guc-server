@@ -344,10 +344,12 @@ module.exports.factory = class extends BaseController {
   async jobApplication(req, res) {
     try {
       const payload = {
-        email: 'principal@gcu.sch.ng',
+        email: 'nedu63ima@gmail.com',
         files: req.body.files,
         subject: `Application for this role: ${req.body.jobTitle}`,
-        content: `<p><b>Name:</b> ${req.body.fullname},</p>  <p><b>Personl Message:</b> ${req.body.message}</p> <br/> <b>Please find attacted applicant resume and cover letter.</b>`
+        content: `<p><b>Name:</b> ${req.body.fullname}</p> ${
+          req.body.message ? `<p><b>Personl Message:</b> ${req.body.message}</p>` : ''
+        } <br/> <b>Please find attacted applicant resume and cover letter.</b>`
       }
       await this.mailJet.sendMail(payload)
       this.response.success(res, 'Message sent successfully')

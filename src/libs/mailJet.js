@@ -41,11 +41,16 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
       if (mail.files) {
         message.Attachments = []
         mail.files.forEach((file, idx) => {
-          const filename = idx === 0 ? 'resume.pdf' : 'cover-letter.pdf'
+          let Base64Content
+          if (file.data) {
+            Base64Content = file.data.split('base64,')[1]
+          } else {
+            Base64Content = file.split('base64,')[1]
+          }
           message.Attachments.push({
             ContentType: 'application/pdf',
-            Filename: mail.files.length > 1 ? filename : 'result.pdf',
-            Base64Content: file.split('base64,')[1]
+            Filename: file.filename || 'result.pdf',
+            Base64Content
           })
         })
       }

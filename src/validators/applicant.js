@@ -90,8 +90,13 @@ module.exports.factory = (_celebrate, helpers) => {
   const jobApplication = celebrate({
     body: Joi.object().keys({
       fullname: Joi.string().required(),
-      files: Joi.array().items(Joi.string().required()).required(),
-      message: Joi.string().required(),
+      files: Joi.array()
+        .items({
+          filename: Joi.string().required(),
+          data: Joi.string().required()
+        })
+        .required(),
+      message: Joi.string().allow(''),
       jobTitle: Joi.string().required()
     })
   })
