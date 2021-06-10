@@ -30,17 +30,20 @@ module.exports.factory = (nodeMailJet, getEnvs, logger, helpers) => {
           Email: mailerEmail
         },
         Subject: mail.subject,
-        HTMLPart: mail.content,
-        To: [
-          {
-            Email: mail.email
-          }
-        ]
+        HTMLPart: mail.content
       }
+
+      message.To = []
+
+      mail.emailsToSend.forEach(email => {
+        message.To.push({
+          Email: email
+        })
+      })
 
       if (mail.files) {
         message.Attachments = []
-        mail.files.forEach((file, idx) => {
+        mail.files.forEach(file => {
           let Base64Content
           if (file.data) {
             Base64Content = file.data.split('base64,')[1]

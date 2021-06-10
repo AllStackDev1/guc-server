@@ -49,7 +49,7 @@ module.exports.factory = class extends BaseController {
         const applicant = await this.applicantRepo.update(doc.applicant, { stage: 12 })
         const { eImgLoc } = this.getEnvs
         const payload = {
-          email: applicant.email,
+          emailsToSend: [applicant.email],
           name: applicant.firstName + ' ' + applicant.lastName,
           data: {
             images: eImgLoc,

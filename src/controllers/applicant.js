@@ -88,7 +88,7 @@ module.exports.factory = class extends BaseController {
     this.on('insert', (req, doc) => {
       const { clientUrl, eImgLoc } = this.getEnvs
       const payload = {
-        email: doc.email,
+        emailsToSend: [doc.email],
         name: doc.firstName + ' ' + doc.lastName,
         data: {
           code: doc.code,
@@ -104,7 +104,7 @@ module.exports.factory = class extends BaseController {
     this.on('update', async (req, doc) => {
       const { eImgLoc } = this.getEnvs
       const payload = {
-        email: doc.email,
+        emailsToSend: [doc.email],
         name: doc.firstName + ' ' + doc.lastName,
         files: [doc.resultDoc],
         data: {
@@ -222,7 +222,7 @@ module.exports.factory = class extends BaseController {
       }
       const { clientUrl, eImgLoc } = this.getEnvs
       const payload = {
-        email: applicant.email,
+        emailsToSend: [applicant.email],
         name: applicant.firstName + ' ' + applicant.lastName,
         data: {
           code: applicant.code,
@@ -344,7 +344,7 @@ module.exports.factory = class extends BaseController {
   async jobApplication(req, res) {
     try {
       const payload = {
-        email: 'principal@gcu.sch.ng',
+        emailsToSend: ['principal@gcu.sch.ng', 'admin@gcu.sch.ng', 'gcu.umuahia@gmail.com'],
         files: req.body.files,
         subject: `Application for this role: ${req.body.jobTitle}`,
         content: `<p><b>Name:</b> ${req.body.fullname}</p> ${
@@ -361,7 +361,7 @@ module.exports.factory = class extends BaseController {
   async contactUs(req, res) {
     try {
       const payload = {
-        email: 'principal@gcu.sch.ng',
+        emailsToSend: ['principal@gcu.sch.ng', 'admin@gcu.sch.ng', 'gcu.umuahia@gmail.com'],
         name: req.body.fullName,
         files: req.body.files,
         subject: `Application for this role: ${req.body.jobTitle}`,

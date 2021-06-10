@@ -48,7 +48,7 @@ module.exports.factory = class extends BaseController {
         const applicant = await this.applicantRepo.getOne({ code: doc.code })
         const { eImgLoc } = this.getEnvs
         const payload = {
-          email: applicant.email,
+          emailsToSend: [applicant.email],
           name: applicant.firstName + ' ' + applicant.lastName,
           data: {
             images: eImgLoc,
