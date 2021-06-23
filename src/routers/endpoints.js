@@ -186,6 +186,13 @@ module.exports.factory = (
         post: [ApplicantValidations.jobApplication, ApplicantController.jobApplication]
       }
     },
+    {
+      route: 'paystack-payment-webhook',
+      methods: ['post'],
+      middlewares: {
+        post: [ApplicantController.paymentWebHook]
+      }
+    },
     // #endregion
 
     // #region ADMIN AUTH ENDPOINTS

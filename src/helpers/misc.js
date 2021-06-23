@@ -3,10 +3,17 @@
  * Order Model. Defining order schema using mongoose
  * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
  */
-
 module.exports.name = 'miscHelpers'
-module.exports.dependencies = ['path', 'lodash', 'moment', 'node-fetch', 'fs-extra']
-module.exports.factory = (path, lodash, moment, fetch, fs) => {
+module.exports.dependencies = [
+  'envs',
+  'path',
+  'lodash',
+  'moment',
+  'node-fetch',
+  'fs-extra',
+  'crypto'
+]
+module.exports.factory = (envs, path, lodash, moment, fetch, fs, crypto) => {
   const { isEmpty } = lodash
 
   // resovle app root path
@@ -45,10 +52,17 @@ module.exports.factory = (path, lodash, moment, fetch, fs) => {
       year: 'numeric'
     })
   }
+  const getHash = (data, type = 'hex') => {
+    return crypto
+      .createHmac('sha512', envs.paystackSecretKey)
+      .update(JSON.stringify(data))
+      .digest(type)
+  }
 
   return {
     ajax,
     Status,
+    getHash,
     getDate,
     readFile,
     dateTime,

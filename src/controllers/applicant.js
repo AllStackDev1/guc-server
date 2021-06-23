@@ -143,6 +143,7 @@ module.exports.factory = class extends BaseController {
     this.resendCode = this.resendCode.bind(this)
     this.getResultFile = this.getResultFile.bind(this)
     this.jobApplication = this.jobApplication.bind(this)
+    this.paymentWebHook = this.paymentWebHook.bind(this)
     this.deleteApplicants = this.deleteApplicants.bind(this)
     this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
     this.getApplicantWithResult = this.getApplicantWithResult.bind(this)
@@ -369,6 +370,31 @@ module.exports.factory = class extends BaseController {
       }
       await this.mailJet.sendMail(payload)
       this.response.success(res, 'Message sent successfully')
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  async paymentWebHook(req, res) {
+    try {
+      // validate event
+      console.log(req.body)
+      const hash = this.helper.getHash(req.body)
+      if (hash === req.headers['x-paystack-signature']) {
+        if (req.body.event === 'charge.success' && req.body.data.status === 'success') {
+          const ref = Buffer.from(req.body.data.reference, 'base64').toString()
+          const applicant = await this.repo.getOne({
+            code: ref.appay,
+            status: this.helper.Status.PENDING
+          })
+          if (applicant) {
+            applicant.status = this.helper.Status.PAID
+            applicant.stage = 6
+            await applicant.save()
+          }
+        }
+      }
+      this.response.success(res)
     } catch (error) {
       this.response.error(res, error.message || error)
     }
