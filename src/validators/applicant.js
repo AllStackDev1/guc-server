@@ -102,11 +102,11 @@ module.exports.factory = (_celebrate, helpers) => {
   })
 
   const contactUs = celebrate({
-    body: Joi.array().items({
-      fullname: Joi.string().required(),
-      files: Joi.array().required(),
+    body: Joi.object().keys({
+      name: Joi.string().required(),
       message: Joi.string().required(),
-      jobTitle: Joi.string().required()
+      email: Joi.string().required(),
+      subject: Joi.string().required()
     })
   })
 

@@ -362,11 +362,14 @@ module.exports.factory = class extends BaseController {
   async contactUs(req, res) {
     try {
       const payload = {
-        emailsToSend: ['principal@gcu.sch.ng', 'admin@gcu.sch.ng', 'gcu.umuahia@gmail.com'],
-        name: req.body.fullName,
-        files: req.body.files,
-        subject: `Application for this role: ${req.body.jobTitle}`,
-        content: `<p>${req.body.message}</p> <br/> <b>Please find attacted applicant resume and cover letter.</b>`
+        // emailsToSend: ['admin@gcu.sch.ng', 'gcu.umuahia@gmail.com'],
+        emailsToSend: ['nedu63ima@outlook.com', 'allstackdev@gmail.com'],
+        name: req.body.name,
+        subject: req.body.subject,
+        content: `<b>Sender Name:</b>  ${req.body.name} <br />
+        <b>Sender Email:</b>: ${req.body.email} <br />
+        <b>Sender Message:</b> ${req.body.message}
+        `
       }
       await this.mailJet.sendMail(payload)
       this.response.success(res, 'Message sent successfully')
