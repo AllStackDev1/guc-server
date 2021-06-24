@@ -377,7 +377,6 @@ module.exports.factory = class extends BaseController {
 
   async paymentWebHook(req, res) {
     try {
-      console.log(req.body)
       const hash = this.helper.getHash(req.body)
       if (hash === req.headers['x-paystack-signature']) {
         if (req.body.event === 'charge.success' && req.body.data.status === 'success') {
