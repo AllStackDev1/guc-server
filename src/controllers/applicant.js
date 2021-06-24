@@ -362,8 +362,7 @@ module.exports.factory = class extends BaseController {
   async contactUs(req, res) {
     try {
       const payload = {
-        // emailsToSend: ['admin@gcu.sch.ng', 'gcu.umuahia@gmail.com'],
-        emailsToSend: ['nedu63ima@outlook.com', 'allstackdev@gmail.com'],
+        emailsToSend: ['admin@gcu.sch.ng', 'gcu.umuahia@gmail.com'],
         name: req.body.name,
         subject: req.body.subject,
         content: `<b>Sender Name:</b>  ${req.body.name} <br />
