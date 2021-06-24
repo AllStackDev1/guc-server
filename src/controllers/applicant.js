@@ -377,14 +377,13 @@ module.exports.factory = class extends BaseController {
 
   async paymentWebHook(req, res) {
     try {
-      // validate event
       console.log(req.body)
       const hash = this.helper.getHash(req.body)
       if (hash === req.headers['x-paystack-signature']) {
         if (req.body.event === 'charge.success' && req.body.data.status === 'success') {
-          const ref = Buffer.from(req.body.data.reference, 'base64').toString()
+          const reference = Buffer.from(req.body.data.reference, 'base64').toString()
           const applicant = await this.repo.getOne({
-            code: ref.appay,
+            code: reference.split('_')[0],
             status: this.helper.Status.PENDING
           })
           if (applicant) {
