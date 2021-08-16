@@ -3,6 +3,7 @@
  */
 
 module.exports = [
+  require('./views'),
   require('./admin'),
   require('./applicant'),
   require('./initial-enquiry'),

@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, serif;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  margin: 0;
+}
+
+.page {
+  position: relative;
+  overflow: hidden;
+  page-break-after: always;
+}
+
+.page.portrait {
+  width: 8.3in;
+  height: 11.73in;
+}
+
+.page .margin-top {
+  height: 0.1in;
+}
+
+.page .header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end
+}
+
+.page .header .now {
+  height: 1in;
+  font-size: small;
+  margin-right: 100px;
+}
+
+.page .footer {
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  font-size: 12px;
+  padding: 10px 70px;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+    padding: 0;
+  }
+}

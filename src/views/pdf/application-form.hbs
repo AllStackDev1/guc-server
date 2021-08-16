@@ -1,0 +1,321 @@
+<style type="text/css" media="screen, print">
+  .page .header {
+    height: 0.5in;
+    margin-top: 40px;
+  }
+
+  .content .heading {
+    display: flex;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: space-between;
+  }
+
+  .content .logo {
+    background: url(/images/logo.png) no-repeat center center;
+    margin-top: 20px;
+    width: 100%;
+    height: 170px;
+  }
+
+  .applicant-code {
+    text-align: center;
+  }
+
+  .personal-info,
+  .previous-school,
+  .siblings-info,
+  .health-medicals,
+  .contact-info,
+  .emergency-contact {
+    margin-top: 30px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .personal-info div,
+  .previous-school div,
+  .siblings-info div,
+  .health-medicals div,
+  .contact-info div,
+  .emergency-contact div {
+    margin-top: 10px;
+  }
+
+  .personal-info>label,
+  .previous-school>label,
+  .siblings-info>label,
+  .health-medicals>label,
+  .contact-info>label,
+  .emergency-contact>label {
+    font-size: large;
+  }
+</style>
+
+<div id="page1" class="page portrait">
+  <div class="margin-top"></div>
+  {{> header}}
+  <div class="container">
+    <div class="content">
+      <div class="heading">
+        <span>GOVERNMENT COLLEGE UMUAHIA EXAMINATION APPLICATION FORM</span>
+      </div>
+
+      <div class="logo"></div>
+
+      <div class="applicant-code">
+        <label>Application Code:</label>
+        <span>#{{data.code}}</span>
+      </div>
+
+      <div class="personal-info">
+        <label>PERSONAL INFORMATION</label>
+        <br />
+        <div>
+          <label>Name:</label>
+          <span>{{data.studentInfo.firstName}} {{data.studentInfo.middleName}} {{data.studentInfo.familyName}}</span>
+        </div>
+        <div>
+          <label>Date of Birth:</label>
+          <span>{{data.studentInfo.dob}}</span>
+        </div>
+        <div>
+          <label>Gender:</label>
+          <span style="text-transform: uppercase;">{{data.studentInfo.gender}}</span>
+        </div>
+        <div>
+          <label>Home Address:</label>
+          <span>
+            {{data.studentInfo.studentAddress}}
+          </span>
+        </div>
+        <div>
+          <label>Country of Birth:</label>
+          <span>{{data.studentInfo.countryOfBirth}}</span>
+        </div>
+        <div>
+          <label>Nationality:</label>
+          <span>{{data.studentInfo.nationality}}</span>
+        </div>
+        <div>
+          <label>Dual Nationality</label>
+          <span>{{data.studentInfo.dualNationality}}</span>
+        </div>
+        <div>
+          <label>First Language:</label>
+          <span>{{data.studentInfo.firstLanguage}}</span>
+        </div>
+        <div>
+          <label>Language(s) spoken at home:</label>
+          <span>{{data.studentInfo.homeLanguage}}</span>
+        </div>
+        <div>
+          <label>Religion:</label>
+          <span>{{data.studentInfo.religion}}</span>
+        </div>
+        <div>
+          <label>Does your child have special needs:</label>
+          <span style="text-transform: uppercase;">{{data.studentBackground.specialNeeds}}</span>
+        </div>
+        <div>
+          <label>More information on child's needs:</label>
+          <span>
+            {{data.studentBackground.details}}
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {{> footer}}
+</div>
+
+<div id="page2" class="page portrait">
+  <div class="margin-top"></div>
+  {{> header}}
+  <div class="container">
+    <div class="content">
+
+      <div class="previous-school">
+        <label>PREVIOUS SCHOOL</label>
+        {{#each data.previousSchools}}
+        <div style="margin-top: 15px">
+          <b>{{formatIndex @index}})</b>
+          <br />
+          <div style="margin-left: 20px; margin-top: -24px">
+            <div>
+              <label>School Name:</label>
+              <span>{{this.name}}</span>
+            </div>
+            <div>
+              <label>School Address:</label>
+              <span>{{this.address}}</span>
+            </div>
+            <div>
+              <label>Email Address:</label>
+              <span>{{this.email}}</span>
+            </div>
+            <div>
+              <label>Date of Entrance:</label>
+              <span>{{formatDate this.dateOfArrival}}</span>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="siblings-info">
+        <label>SIBLINGS INFORMATION</label>
+        {{#each data.siblings}}
+        <div style="margin-top: 15px">
+          <b>{{formatIndex @index}})</b>
+          <br />
+          <div style="margin-left: 20px; margin-top: -24px">
+            <div>
+              <label>Name:</label>
+              <span>{{this.name}}</span>
+            </div>
+            <div>
+              <label>Gender:</label>
+              <span>{{this.gender}}</span>
+            </div>
+            <div>
+              <label>Date of Birth:</label>
+              <span>{{formatDate this.dob}}</span>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+    </div>
+  </div>
+  {{> footer}}
+</div>
+
+<div id="page3" class="page portrait">
+  <div class="margin-top"></div>
+  {{> header}}
+  <div class="container">
+    <div class="content">
+
+      <div class="health-medicals">
+        <label>HEALTH AND MEDICALS</label>
+        <br />
+        <div>
+          <label>Has your child been diagnosed with any of the following:</label>
+          <br />
+          <span>Asthma <input type="checkbox" {{#if data.healthAndMedical.asthma}}checked{{/if}} /></span>
+          <span>Allergies <input type="checkbox" {{#if data.healthAndMedical.allergies}}checked{{/if}} /></span>
+          <span>Epilepsy <input type="checkbox" {{#if data.healthAndMedical.epilepsy}}checked{{/if}} /></span>
+          <span>Diabetes <input type="checkbox" {{#if data.healthAndMedical.diabiates}}checked{{/if}} /></span>
+        </div>
+        <div>
+          <label>Does your child require a medical plan?</label>
+          <span>{{data.healthAndMedical.requireMedicalPlan}}</span>
+        </div>
+        <div>
+          <label>Are there any dietary restrictions?</label>
+          <span>{{data.healthAndMedical.dietaryRestriction}}</span>
+        </div>
+        <div>
+          <label>Does your child have any physical restriction?</label>
+          <span>{{data.healthAndMedical.physicalRestriction}}</span>
+        </div>
+        <div>
+          <label>Does your child have any other medical issues?</label>
+          <span>{{data.healthAndMedical.otherMedicalIssues}}</span>
+        </div>
+        <div>
+          <label>Is your child immunized?</label>
+          <span>{{data.healthAndMedical.isImmunised}}</span>
+        </div>
+      </div>
+
+      <div class="contact-info">
+        <label>CONTACT INFORMATION</label>
+        <br />
+        <div>
+          <label>Relation to Student:</label>
+          <span>{{data.guardianContactInformation.relation}}</span>
+        </div>
+        <div>
+          <label>Title:</label>
+          <span>{{data.guardianContactInformation.title}}</span>
+        </div>
+        <div>
+          <label>First Name:</label>
+          <span>{{data.guardianContactInformation.firstName}}</span>
+        </div>
+        <div>
+          <label>Last Name:</label>
+          <span>{{data.guardianContactInformation.familyName}}</span>
+        </div>
+        <div>
+          <label>Email Address:</label>
+          <span>{{data.guardianContactInformation.email}}</span>
+        </div>
+        <div>
+          <label>Occupation:</label>
+          <span>{{data.guardianContactInformation.occupation}}</span>
+        </div>
+        <div>
+          <label>Address 1:</label>
+          <br />
+          <span>{{data.guardianContactInformation.addressOne}}</span>
+        </div>
+        <div>
+          <label>Address 2:</label>
+          <br />
+          <span>{{data.guardianContactInformation.addressTwo}}</span>
+        </div>
+        <div>
+          <label>State:</label>
+          <span>{{data.guardianContactInformation.addressTwo}}</span>
+        </div>
+        <div>
+          <label>Mobile Number:</label>
+          <span>{{data.guardianContactInformation.mobileNumber}}</span>
+        </div>
+        <div>
+          <label>House Number:</label>
+          <span>{{data.guardianContactInformation.homeLanguage}}</span>
+        </div>
+        <div>
+          <label>Work Number:</label>
+          <span>{{data.guardianContactInformation.workNumber}}</span>
+        </div>
+        <div>
+          <label>How did you hear about us?</label>
+          <span>{{data.guardianContactInformation.hearAboutUs}}</span>
+        </div>
+        <div>
+          <label>I give permission for the students photo to appear on school portal:</label>
+          <span>{{data.guardianContactInformation.permissions}}</span>
+        </div>
+      </div>
+
+      <div class="emergency-contact">
+        <label>EMERGENCY CONTACT</label>
+        <br />
+        <div>
+          <label>Name:</label>
+          <span>{{data.emergencyContact.name}}</span>
+        </div>
+        <div>
+          <label>Relationship to Ward:</label>
+          <span>{{data.emergencyContact.relationship}}</span>
+        </div>
+        <div>
+          <label>Contact Number:</label>
+          <span>{{data.emergencyContact.contactNumber}}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {{> footer}}
+</div>

@@ -9,11 +9,14 @@ module.exports.dependencies = [
   'helmet',
   'morgan',
   'body-parser',
+  'express-handlebars',
   'celebrate',
   'db',
   'routers',
   'logger',
-  'response'
+  'response',
+  'miscHelpers',
+  'hbsHelpers'
 ]
 module.exports.factory = (
   express,
@@ -21,11 +24,14 @@ module.exports.factory = (
   helmet,
   morgan,
   bodyParser,
+  hbs,
   celebrate,
   db,
   routers,
   logger,
-  response
+  response,
+  helpers,
+  hbsHelpers
 ) => {
   'use strict'
 
@@ -34,6 +40,9 @@ module.exports.factory = (
 
   // error handler
   const { errors } = celebrate
+
+  // resolve root folder path
+  const { appRoot } = helpers
 
   // application server
   const app = express()
@@ -49,6 +58,20 @@ module.exports.factory = (
   if (app.get('env') === 'DEV') {
     app.use(morgan('combined'))
   }
+
+  // register views
+  app.use(express.static(`${appRoot}/public`))
+  app.set('views', './src/views')
+  app.engine(
+    '.hbs',
+    hbs({
+      defaultLayout: 'layouts',
+      extname: '.hbs',
+      layoutsDir: `${appRoot}/views/`,
+      helpers: hbsHelpers
+    })
+  )
+  app.set('view engine', 'hbs')
 
   // server error middleware
   app.use(function (error, req, res, next) {

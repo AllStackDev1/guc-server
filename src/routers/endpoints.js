@@ -7,6 +7,7 @@
 
 module.exports.name = 'endpoints'
 module.exports.dependencies = [
+  'ViewsController',
   'AdminController',
   'AdminValidations',
   'ApplicantController',
@@ -34,6 +35,7 @@ module.exports.dependencies = [
   'miscHelpers'
 ]
 module.exports.factory = (
+  ViewsController,
   AdminController,
   AdminValidations,
   ApplicantController,
@@ -68,6 +70,17 @@ module.exports.factory = (
    * @param { { post: Array<Function>, get: Array<Function>, patch: Array<Function>, put: Array<Function>, delete: Array<Function> } } middlewares request handlers
    */
   return [
+    // #region VIEWS ROUTE
+
+    {
+      route: 'pdf-application-form/:id',
+      methods: ['get'],
+      middlewares: {
+        get: [ViewsController.applicationForm]
+      }
+    },
+
+    // #endregion
     // #region APPLICANT AUTH ENDPOINTS
     {
       route: 'enroll',
@@ -160,6 +173,14 @@ module.exports.factory = (
       guard: true,
       middlewares: {
         patch: [hasAccess([APPLICANT]), ApplicantValidations.patch, ApplicantController.update]
+      }
+    },
+    {
+      route: 'applicants/:id/form',
+      methods: ['get'],
+      guard: true,
+      middlewares: {
+        get: [hasAccess([ADMIN]), ApplicantController.getApplicationForm]
       }
     },
     {

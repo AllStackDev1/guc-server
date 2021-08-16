@@ -16,16 +16,22 @@ module.exports.dependencies = [
 module.exports.factory = (envs, path, lodash, moment, fetch, fs, crypto) => {
   const { isEmpty } = lodash
 
-  // resovle app root path
+  // resolve app root path
   const appRoot = path.resolve('src')
 
   const isNotEmpty = val => !isEmpty(val)
+
+  const getServerUrl = req => req && req.protocol + '://' + req.get('host')
 
   const readFile = async filePath => await fs.readFile(`${appRoot}/${filePath}`, 'utf8')
 
   const replaceDoubleBraces = (str, data) => {
     return str.replace(/{{(.+?)}}/g, (_, g1) => data[g1] || g1)
   }
+
+  const formatDate = (date, format) => moment(date ? new Date(date) : new Date()).format(format)
+
+  const leanDate = data => JSON.parse(JSON.stringify(data))
 
   const AccessType = {
     APPLICANT: 'APPLICANT',
@@ -45,7 +51,7 @@ module.exports.factory = (envs, path, lodash, moment, fetch, fs, crypto) => {
 
   const dateTime = new Date().toISOString().slice(-24).replace(/\D/g, '').slice(0, 14)
 
-  const getformattedDate = date => {
+  const getFormattedDate = date => {
     return new Date(date).toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'short',
@@ -62,13 +68,17 @@ module.exports.factory = (envs, path, lodash, moment, fetch, fs, crypto) => {
   return {
     ajax,
     Status,
+    appRoot,
     getHash,
     getDate,
+    leanDate,
     readFile,
     dateTime,
+    formatDate,
     isNotEmpty,
     AccessType,
-    getformattedDate,
+    getServerUrl,
+    getFormattedDate,
     replaceDoubleBraces
   }
 }

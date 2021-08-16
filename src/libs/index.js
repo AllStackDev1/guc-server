@@ -3,6 +3,7 @@
  */
 
 module.exports = [
+  require('./pdf.gen'),
   require('./termii'),
   require('./twilio'),
   require('./mailJet'),

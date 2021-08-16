@@ -53,7 +53,7 @@ module.exports.factory = class extends BaseController {
           data: {
             images: eImgLoc,
             accessCode: doc.accessCode,
-            examDate: this.helper.getformattedDate(doc.examDate),
+            examDate: this.helper.getFormattedDate(doc.examDate),
             examTime: new Date(doc.examDate).toLocaleTimeString('en-US'),
             firstName: applicant.firstName,
             year: new Date().getFullYear()

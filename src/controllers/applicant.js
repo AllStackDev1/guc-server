@@ -19,6 +19,7 @@ module.exports.dependencies = [
   'GuardianContactInformationRepository',
   'EmergencyContactRepository',
   'DownloadListRepository',
+  'PDF',
   'MailJet',
   'Twilio',
   'Termii',
@@ -40,6 +41,7 @@ module.exports.factory = class extends BaseController {
    * @param {object} guardianContactInformationRepo
    * @param {object} emergencyContactRepo
    * @param {object} downloadListRepo
+   * @param {object} pdf
    * @param {object} mailJet - mailing function object
    * @param {object} termii - otp functions object
    * @param {object} getEnvs - env object
@@ -58,6 +60,7 @@ module.exports.factory = class extends BaseController {
     guardianContactInformationRepo,
     emergencyContactRepo,
     downloadListRepo,
+    pdf,
     mailJet,
     twilio,
     termii,
@@ -74,6 +77,7 @@ module.exports.factory = class extends BaseController {
     this.twilio = twilio
     this.termii = termii
     this.getEnvs = getEnvs
+    this.pdf = pdf
 
     this.initialEnquiryRepo = initialEnquiryRepo
     this.previousSchoolRepo = previousSchoolRepo
@@ -134,6 +138,14 @@ module.exports.factory = class extends BaseController {
       }
     })
 
+    this.on('save-application-form', async (id, file) => {
+      try {
+        await this.repo.update(id, { formDoc: file })
+      } catch (error) {
+        this.log(error)
+      }
+    })
+
     // method binding
     this.auth = this.auth.bind(this)
     this.preGet = this.preGet.bind(this)
@@ -145,6 +157,7 @@ module.exports.factory = class extends BaseController {
     this.jobApplication = this.jobApplication.bind(this)
     this.paymentWebHook = this.paymentWebHook.bind(this)
     this.deleteApplicants = this.deleteApplicants.bind(this)
+    this.getApplicationForm = this.getApplicationForm.bind(this)
     this.fetchApplicantDetails = this.fetchApplicantDetails.bind(this)
     this.getApplicantWithResult = this.getApplicantWithResult.bind(this)
     this.fetchAllApplicantDetails = this.fetchAllApplicantDetails.bind(this)
@@ -280,7 +293,7 @@ module.exports.factory = class extends BaseController {
     }
   }
 
-  async fetchApplicantDetails(req, res) {
+  async fetchApplicantDetails(req, res, call) {
     try {
       const applicant = {}
       const query = { applicant: req.params.id }
@@ -294,9 +307,17 @@ module.exports.factory = class extends BaseController {
           query
         )
         applicant.emergencyContact = await this.emergencyContactRepo.getOne(query)
-        this.response.successWithData(res, applicant)
+        if (call) {
+          return applicant
+        } else {
+          this.response.successWithData(res, applicant)
+        }
       } else {
-        this.response.successWithData(res, {}, 'No record found')
+        if (call) {
+          return {}
+        } else {
+          this.response.successWithData(res, {}, 'No record found')
+        }
       }
     } catch (error) {
       this.response.error(res, error.message || error)
@@ -395,6 +416,43 @@ module.exports.factory = class extends BaseController {
         }
       }
       this.response.success(res)
+    } catch (error) {
+      this.response.error(res, error.message || error)
+    }
+  }
+
+  /**
+   * @description
+   * This method generate application form,
+   * if successful, response with base64
+   */
+  async getApplicationForm(req, res) {
+    try {
+      // Helpers
+      const { formatDate } = this.helper
+      const applicant = await this.repo.getById(req.params.id)
+      if (applicant.formDoc) {
+        this.response.successWithData(res, applicant.formDoc)
+      } else {
+        // form can only be printed for completed application form
+        if (applicant.stage < 12) {
+          throw new Error('Cannot generated application form for uncompleted application!')
+        }
+
+        // perform some data modification
+        const data = {
+          code: applicant.code,
+          type: 'application-form',
+          now: formatDate(null, 'llll')
+        }
+
+        // Generate pdf file
+        const file = await this.pdf(req, data)
+
+        // emit an event to save-application-form
+        this.emit('save-application-form', applicant._id, file)
+        this.response.successWithData(res, file)
+      }
     } catch (error) {
       this.response.error(res, error.message || error)
     }

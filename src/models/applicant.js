@@ -60,6 +60,9 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
       resultDoc: {
         type: String
       },
+      formDoc: {
+        type: String
+      },
       isAdmitted: {
         type: Boolean,
         default: false
@@ -110,6 +113,7 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
       'lastName',
       'phoneNumber',
       'resultDoc',
+      'formDoc',
       'isAdmitted',
       'createdAt',
       'status',
@@ -122,6 +126,7 @@ module.exports.factory = (mongoose, jwt, lodash, generateCode, getEnvs, helpers)
     const applicant = this
     const data = Object.assign({}, applicant.toJSON())
     delete data.resultDoc
+    delete data.formDoc
     return jwt.sign(data, secret, { expiresIn }).toString()
   }
 

@@ -27,6 +27,8 @@ module.exports.factory = () => {
 
   const forbidden = res => res.status(403).json({ statusCode: 403, message: 'forbidden' })
 
+  const redirect = (res, url) => res.status(301).redirect(url)
+
   const notFound = res => res.status(404).json({ statusCode: 404, message: 'Not found' })
 
   const methodNotAllowed = res =>
@@ -39,15 +41,16 @@ module.exports.factory = () => {
     res.status(500).json({ statusCode: 500, message })
 
   return {
+    error,
     success,
+    redirect,
+    notFound,
+    forbidden,
+    serverError,
+    unauthorized,
     successWithData,
     successWithFile,
-    error,
-    unauthorized,
-    forbidden,
-    notFound,
     methodNotAllowed,
-    unprocessableEntity,
-    serverError
+    unprocessableEntity
   }
 }
