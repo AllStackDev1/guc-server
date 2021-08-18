@@ -26,19 +26,29 @@ module.exports.factory = function (mongoose, Database, logger, log4js) {
    * connection is opened
    * @returns db connection
    */
-  const dbConfig = callback => {
-    mongoose.connect(connString, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      connectTimeoutMS: 10000,
-      writeConcern: {
-        w: 'majority',
-        j: true,
-        wtimeout: 1000
-      }
-    })
+  const dbConfig = () => {
+    const connect = () =>
+      mongoose
+        .connect(connString, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          useFindAndModify: false,
+          useCreateIndex: true,
+          connectTimeoutMS: 10000,
+          writeConcern: {
+            w: 'majority',
+            j: true,
+            wtimeout: 1000
+          },
+          auto_reconnect: true
+        })
+        .catch(error => {
+          logger.debug(error)
+          log4js.shutdown()
+          process.exit(1)
+        })
+
+    connect()
 
     const db = mongoose.connection
 
@@ -49,19 +59,20 @@ module.exports.factory = function (mongoose, Database, logger, log4js) {
 
     db.on('error', err => {
       logger.debug(`Database connection error: ${err}`)
-      log4js.shutdown()
-      process.exit(1)
+      mongoose.disconnect()
     })
 
     db.on('disconnected', err => {
       logger.debug(`Database disconnection error: ${err}`)
-      log4js.shutdown()
-      process.exit(1)
+      connect()
     })
 
-    // Execute callback method if database connection is opened
-    db.on('open', () => {
-      callback(mongoose)
+    // Close the Mongoose connection, when receiving SIGINT
+    process.on('SIGINT', function () {
+      db.close(() => {
+        logger.debug('Force to close the MongoDB connection after SIGINT')
+        process.exit(0)
+      })
     })
 
     return db
