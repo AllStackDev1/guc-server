@@ -2,7 +2,7 @@
  * @summary
  * This is the configuration file for database connnections
  * It decides which database to connect to based on the environment settings
- * @author Chinedu Ekene Okpala <allstackdev@gmail.com>
+ * @author Peter Yefi  <peter.yefi@completefarmer.com>
  */
 
 module.exports.name = 'db'
@@ -26,31 +26,11 @@ module.exports.factory = function (mongoose, Database, logger, log4js) {
    * connection is opened
    * @returns db connection
    */
-  const dbConfig = () => {
-    const connect = () =>
-      mongoose
-        .connect(connString, {
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-          useFindAndModify: false,
-          useCreateIndex: true,
-          connectTimeoutMS: 10000,
-          writeConcern: {
-            w: 'majority',
-            j: true,
-            wtimeout: 1000
-          },
-          auto_reconnect: true
-        })
-        .catch(error => {
-          logger.debug(error)
-          log4js.shutdown()
-          process.exit(1)
-        })
-
-    connect()
-
+  const dbConfig = callback => {
+    mongoose.connect(connString, { useNewUrlParser: true, useUnifiedTopology: true })
     const db = mongoose.connection
+    mongoose.set('useCreateIndex', true)
+    mongoose.set('useFindAndModify', false)
 
     // Database connection events
     db.on('connected', () => {
@@ -59,20 +39,19 @@ module.exports.factory = function (mongoose, Database, logger, log4js) {
 
     db.on('error', err => {
       logger.debug(`Database connection error: ${err}`)
-      mongoose.disconnect()
+      log4js.shutdown()
+      process.exit(1)
     })
 
     db.on('disconnected', err => {
       logger.debug(`Database disconnection error: ${err}`)
-      connect()
+      log4js.shutdown()
+      process.exit(1)
     })
 
-    // Close the Mongoose connection, when receiving SIGINT
-    process.on('SIGINT', function () {
-      db.close(() => {
-        logger.debug('Force to close the MongoDB connection after SIGINT')
-        process.exit(0)
-      })
+    // Execute callback method if database connection is opened
+    db.on('open', () => {
+      callback(mongoose)
     })
 
     return db

@@ -90,11 +90,11 @@ module.exports.factory = (
   app.use(errors())
 
   // connect to the database and if successful, start the server
-  dbConfig()
-
-  app.listen(port, () => {
-    logger.debug(`Express server listening on port ${port}`)
-    logger.debug(`You should be able to connect to the api on http://localhost:${port}`)
+  dbConfig(() => {
+    app.listen(port, () => {
+      logger.debug(`Express server listening on port ${port}`)
+      logger.debug(`You should be able to connect to the api on http://localhost:${port}`)
+    })
   })
 
   return app
